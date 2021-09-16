@@ -1,0 +1,57 @@
+{
+  "name": "PolisChain Tokens",
+  "timestamp": "2021-08-25T09:59:51.016Z",
+  "version": {
+    "major": 1,
+    "minor": 1,
+    "patch": 0
+  },
+  "tags": {},
+  "logoURI": "https://raw.githubusercontent.com/hades-finance/assets/master/blockchains/sparta/assets/0xc9Ec2EDD1BA38918a55B5ab637dd0Ac02e6e4058/logo.png",
+  "keywords": [
+    "hadeswap",
+    "default"
+  ],
+  "tokens": [
+    {
+    "address": "0xC614405267eCDbF01FB5b425e3F2EC657160101A",
+    "chainId": 333888,
+    "name": "Wrapped Polis",
+    "symbol": "WETH",
+    "decimals": 18,
+    "logoURI": "https://raw.githubusercontent.com/hades-finance/assets/master/blockchains/sparta/assets/0xC614405267eCDbF01FB5b425e3F2EC657160101A/logo.png"
+    },
+    {
+      "address": "0xc9Ec2EDD1BA38918a55B5ab637dd0Ac02e6e4058",
+      "chainId": 333888,
+      "name": "Soul Token",
+      "symbol": "SOUL",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/hades-finance/assets/master/blockchains/sparta/assets/0xc9Ec2EDD1BA38918a55B5ab637dd0Ac02e6e4058/logo.png"
+    },
+    {
+      "address": "0x388ABBB063608924d8033F1B1266B64C93F1a3a3",
+      "chainId": 333888,
+      "name": "Dai Stablecoin",
+      "symbol": "DAI",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/hades-finance/assets/master/blockchains/sparta/assets/0x388ABBB063608924d8033F1B1266B64C93F1a3a3/logo.png"
+    },
+    {
+      "address": "0xb5bea8a26d587cf665f2d78f077cca3c7f6341bd",
+      "chainId": 56,
+      "name": "Polis Bsc",
+      "symbol": "POLIS",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/hades-finance/assets/master/blockchains/bsc/assets/0xb5bEa8a26D587CF665f2d78f077CcA3C7f6341BD/logo.png"
+    },
+    {
+      "address": "0xf4a772216e9266d062cee940b13a709f3542247b",
+      "chainId": 80001,
+      "name": "Mock token",
+      "symbol": "MOCK",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/hades-finance/assets/master/blockchains/bsc/assets/0xb5bEa8a26D587CF665f2d78f077CcA3C7f6341BD/logo.png"
+    }
+  ]
+}
