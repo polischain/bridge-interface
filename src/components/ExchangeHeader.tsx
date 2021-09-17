@@ -3,31 +3,22 @@ import Settings from './Settings'
 import { NavLink } from './Link'
 import animationData from '../assets/animation/settings-slider.json'
 import profileAnimationData from '../assets/animation/wallet.json'
-
+import {NETWORK_ICON, NETWORK_LABEL} from '../constants/networks'
 import Lottie from 'lottie-react'
 import Gas from './Gas'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { ChainId } from 'hadeswap-beta-sdk'
 
 export default function SwapHeader({ input = undefined, output = undefined }: any): JSX.Element {
     const { i18n } = useLingui()
     const [animateSettings, setAnimateSettings] = useState(false)
     const [animateWallet, setAnimateWallet] = useState(false)
+
     return (
         <div className="flex justify-between space-x-3 pt-4 px-4">
             <div className="grid grid-cols-1 rounded-md p-3px md:bg-dark-800">
-                <NavLink
-                    className="flex items-center justify-center px-4 md:px-10 rounded-md text-center text-secondary hover:text-high-emphesis text-base font-medium"
-                    activeClassName="font-bold text-high-emphesis md:bg-dark-900 md:border-gradient"
-                    to={{
-                        pathname: '/swap',
-                        search: `?inputCurrency=${input && input.address ? input.address : 'ETH'}${
-                            output && output.address ? `&outputCurrency=${output.address}` : ''
-                        }`
-                    }}
-                >
-                    {i18n._(t`Bridge`)}
-                </NavLink>
+                    {`Current Bridge: ${input && input} -> ${output && output}` }
             </div>
             {/*<div className="flex items-center rounded md:border-2 md:border-dark-800 md:p-2">*/}
             {/*    <div className="grid grid-flow-col gap-3">*/}

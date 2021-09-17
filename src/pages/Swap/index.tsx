@@ -3,11 +3,13 @@ import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../
 import { AutoRow, RowBetween } from '../../components/Row'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/ButtonLegacy'
 import Card, { DarkCard, GreyCard } from '../../components/CardLegacy'
-import { ChainId, Currency, CurrencyAmount, JSBI, Token, Trade } from 'hadeswap-beta-sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, Trade } from 'hadeswap-beta-sdk'
 import Column, { AutoColumn } from '../../components/Column'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
+import {NETWORK_ICON, NETWORK_LABEL} from '../../constants/networks'
+import {CHAIN_BRIDGES} from '../../constants'
+
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import {
     useDefaultsFromURLSearch,
@@ -27,7 +29,7 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Field } from '../../state/swap/actions'
 import { Helmet } from 'react-helmet'
-import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import { INITIAL_ALLOWED_SLIPPAGE, SHOW_NATIVE } from '../../constants'
 import Loader from '../../components/Loader'
 import Lottie from 'lottie-react'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -105,7 +107,7 @@ export default function Swap() {
               [Field.OUTPUT]: parsedAmount
           }
 
-    const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+    const { onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
     const isValid = !swapInputError
     const dependentField: Field = Field.INPUT
 
@@ -175,6 +177,12 @@ export default function Swap() {
     const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(currencies[Field.OUTPUT], parsedAmounts[independentField], 0, recipient)
 
     console.log("SWAPCALLBACK: ",swapCallbackError, recipient)
+
+    // let showETH = chainId?SHOW_NATIVE[chainId]:false
+    //
+    // if(showETH) {
+    //     onCurrencySelection(Field.OUTPUT, ETHER)
+    // }
 
     const handleSwap = useCallback(() => {
         if (!swapCallback) {
@@ -303,7 +311,7 @@ export default function Swap() {
             />
             <SwapPoolTabs active={'swap'} />
             <div className="bg-dark-900 shadow-swap-blue-glow w-full max-w-2xl rounded">
-                <SwapHeader input={currencies[Field.INPUT]} output={currencies[Field.OUTPUT]} />
+                <SwapHeader input={chainId?NETWORK_LABEL[chainId]:''} output={chainId?NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain]:''} />
                 <Wrapper id="swap-page">
                     <ConfirmSwapModal
                         isOpen={showConfirm}

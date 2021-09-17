@@ -23,6 +23,7 @@ import ImportRow from './ImportRow'
 import { useTokenComparator } from './sorting'
 import ModalHeader from '../ModalHeader'
 import { useLingui } from '@lingui/react'
+import { SHOW_NATIVE } from '../../constants'
 
 const ContentWrapper = styled(Column)`
     width: 100%;
@@ -84,7 +85,7 @@ export function CurrencySearch({
         }
     }, [isAddressSearch])
 
-    const showETH: boolean = useMemo(() => {
+    let showETH: boolean = useMemo(() => {
         const s = debouncedQuery.toLowerCase().trim()
         return s === '' || s === 'e' || s === 'et' || s === 'eth'
     }, [debouncedQuery])
@@ -151,6 +152,8 @@ export function CurrencySearch({
     const inactiveTokens = useFoundOnInactiveList(debouncedQuery)
     const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, debouncedQuery)
 
+    showETH = chainId?SHOW_NATIVE[chainId]:false
+
     return (
         <ContentWrapper>
             <ModalHeader onClose={onDismiss} title="Select a token" />
@@ -187,7 +190,7 @@ export function CurrencySearch({
                         {({ height }) => (
                             <CurrencyList
                                 height={height}
-                                showETH={false}
+                                showETH={showETH}
                                 currencies={
                                     filteredInactiveTokens
                                         ? filteredSortedTokens.concat(filteredInactiveTokens)

@@ -1,12 +1,12 @@
 import { Currency, CurrencyAmount, ETHER, JSBI, Percent, Token, ChainId, ROUTER_ADDRESS } from 'hadeswap-beta-sdk'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { BRIDGE_FOREIGN_ADDRESS } from '../constants'
+import { BRIDGE_ADDRESS, SHOW_NATIVE } from '../constants'
 import { AddressZero } from '@ethersproject/constants'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import Fraction from 'entities/Fraction'
-import  { abi as BridgeABI }  from '../constants/abis/bridge_foreign.json'
-// import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import  { abi as BridgeForeignABI }  from '../constants/abis/bridge_foreign.json'
+import  { abi as BridgeHomeABI }  from '../constants/abis/bridge_home.json'
 
 import Numeral from 'numeral'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -461,12 +461,17 @@ export function getBridgeAddress(chainId?: ChainId) {
     if (!chainId) {
         throw Error(`Undefined 'chainId' parameter '${chainId}'.`)
     }
-    return BRIDGE_FOREIGN_ADDRESS[chainId]
+    return BRIDGE_ADDRESS[chainId]
 }
 
 // account is optional
-export function getBridgeContract(chainId: number, library: Web3Provider, account?: string): Contract {
-    return getContract(getBridgeAddress(chainId), BridgeABI, library, account)
+export function getBridgeContract(chainId: number, library: Web3Provider, account?: string, isNative = false): Contract {
+    if(isNative) {
+        return getContract(getBridgeAddress(chainId), BridgeHomeABI, library, account)
+    } else {
+        return getContract(getBridgeAddress(chainId), BridgeForeignABI, library, account)
+    }
+
 }
 
 export function escapeRegExp(string: string): string {

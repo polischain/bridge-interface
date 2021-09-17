@@ -17,6 +17,7 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import { SHOW_NATIVE } from '../../constants'
 
 export function useSwapState(): AppState['swap'] {
     return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -39,7 +40,7 @@ export function useSwapActionHandlers(): {
                 })
             )
         },
-        []
+        [dispatch]
     )
 
     const onSwitchTokens = useCallback(() => {
@@ -118,7 +119,7 @@ export function useDerivedSwapInfo(): {
     const { i18n } = useLingui()
     const { account, chainId } = useActiveWeb3React()
 
-    const {
+    let {
         independentField,
         typedValue,
         [Field.INPUT]: { currencyId: inputCurrencyId },
@@ -129,7 +130,14 @@ export function useDerivedSwapInfo(): {
     console.log('SWAP STATE: ', independentField, typedValue, recipient)
 
     const inputCurrency = useCurrency(inputCurrencyId)
+    // If the chain is native, then force the native coin only
+    const showETH = chainId?SHOW_NATIVE[chainId]:false
+    if (showETH) {
+        outputCurrencyId = 'ETH'
+    }
     const outputCurrency = useCurrency(outputCurrencyId)
+
+
     const recipientLookup = useENS(recipient ?? undefined)
     const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 

@@ -61,58 +61,7 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
 
     return (
         <Tabs style={{ marginBottom: '20px', display: 'none' }}>
-            <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
-                {i18n._(t`Swap`)}
-            </StyledNavLink>
-            <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-                {i18n._(t`Pool`)}
-            </StyledNavLink>
-        </Tabs>
-    )
-}
-
-export function FindPoolTabs() {
-    const { i18n } = useLingui()
-
-    return (
-        <Tabs>
-            <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-                <HistoryLink to="/pool">
-                    <StyledArrowLeft />
-                </HistoryLink>
-                <ActiveText>{i18n._(t`Import Pool`)}</ActiveText>
-                <Settings />
-            </RowBetween>
-        </Tabs>
-    )
-}
-
-export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
-    const { i18n } = useLingui()
-
-    // reset states on back
-    const dispatch = useDispatch<AppDispatch>()
-
-    return (
-        <Tabs>
-            <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-                <HistoryLink
-                    to="/pool"
-                    onClick={() => {
-                        adding && dispatch(resetMintState())
-                    }}
-                >
-                    <StyledArrowLeft />
-                </HistoryLink>
-                <ActiveText>
-                    {creating
-                        ? i18n._(t`Create a pair`)
-                        : adding
-                        ? i18n._(t`Add Liquidity`)
-                        : i18n._(t`Remove Liquidity`)}
-                </ActiveText>
-                <Settings />
-            </RowBetween>
+                {i18n._(t`Bridge`)}
         </Tabs>
     )
 }

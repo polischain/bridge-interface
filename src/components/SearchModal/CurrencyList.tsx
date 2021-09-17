@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from 'hadeswap-beta-sdk'
+import { SHOW_NATIVE } from '../../constants'
 import { LightGreyCard } from 'components/CardLegacy'
 import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
@@ -161,6 +162,12 @@ export default function CurrencyList({
     setImportToken: (token: Token) => void
     breakIndex: number | undefined
 }) {
+    const { chainId } = useActiveWeb3React()
+
+    // showETH = chainId?SHOW_NATIVE[chainId]:false
+    //
+    console.log('shoWETH', showETH)
+
     const itemData: (Currency | undefined)[] = useMemo(() => {
         let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
         if (breakIndex !== undefined) {
@@ -169,7 +176,9 @@ export default function CurrencyList({
         return formatted
     }, [breakIndex, currencies, showETH])
 
-    const { chainId } = useActiveWeb3React()
+    console.log('ITEM DATA:', itemData)
+
+
     const theme = useTheme()
 
     const inactiveTokens: {

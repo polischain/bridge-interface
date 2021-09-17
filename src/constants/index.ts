@@ -12,12 +12,29 @@ export const BORING_HELPER_ADDRESS = {
 
 }
 
-export const BRIDGE_FOREIGN_ADDRESS = {
-    [ChainId.MAINNET]: '0x1ED9cA7E442a91591AcecFb2D40e843e4FEE00ff',
-    [ChainId.SPARTA]: '0x1ED9cA7E442a91591AcecFb2D40e843e4FEE00ff',
-    [ChainId.BSC]: '0x1ED9cA7E442a91591AcecFb2D40e843e4FEE00ff',
+export const BRIDGE_ADDRESS = {
+    [ChainId.MAINNET]: '',
+    [ChainId.SPARTA]: '0x74bBBd046627CE60148197ab836D011c7Cec4D69',
+    [ChainId.BSC]: '',
     [ChainId.MUMBAI]: '0x1ED9cA7E442a91591AcecFb2D40e843e4FEE00ff'
 
+}
+
+// Given the selected chainId, returns the other-side-of-the-bridge chainID and if the other side is the native or the foreign
+export const CHAIN_BRIDGES = {
+    [ChainId.MUMBAI]: { chain: ChainId.SPARTA, isNative: true },
+    [ChainId.SPARTA]: { chain: ChainId.MUMBAI, isNative: false},
+    [ChainId.BSC]: { chain: ChainId.MAINNET, isNative: true},
+    [ChainId.MAINNET]: { chain: ChainId.BSC, isNative: false},
+
+}
+
+// Should a currency list show the native coin as option
+export const SHOW_NATIVE = {
+    [ChainId.MAINNET]: true,
+    [ChainId.SPARTA]: true,
+    [ChainId.BSC]:false,
+    [ChainId.MUMBAI]: false,
 }
 
 // a list of tokens by chain
@@ -52,11 +69,11 @@ export const WBTC = new Token(1, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-    // ...WRAPPED_NATIVE_ONLY,
+    ...WRAPPED_NATIVE_ONLY,
     [ChainId.MAINNET]: [...WRAPPED_NATIVE_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
     [ChainId.BSC]: [],
     [ChainId.SPARTA]: [],
-    [ChainId.MUMBAI]: []
+    [ChainId.MUMBAI]: [],
 }
 
 /**
@@ -70,6 +87,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 export const SUGGESTED_BASES: ChainTokenList = {
     ...WRAPPED_NATIVE_ONLY,
     [ChainId.MAINNET]: [...WRAPPED_NATIVE_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
+
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

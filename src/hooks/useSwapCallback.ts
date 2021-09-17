@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { Currency, CurrencyAmount, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from 'hadeswap-beta-sdk'
 import { useMemo } from 'react'
-import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
+import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE, SHOW_NATIVE } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getBridgeContract, isAddress, shortenAddress } from '../utils'
 import { isZero } from 'functions'
@@ -57,7 +57,7 @@ function useSwapCallArguments(
     return useMemo(() => {
         if (!amount || !currency || !recipient || !library || !account || !chainId || !deadline) return []
 
-        const contract: Contract | null = getBridgeContract(chainId, library, account)
+        const contract: Contract | null = getBridgeContract(chainId, library, account, SHOW_NATIVE[chainId])
         if (!contract) {
             return []
         }
@@ -66,12 +66,24 @@ function useSwapCallArguments(
         let args: (string | string[])[]
         let value: string
 
-        methodName = 'relayTokens'
-        // (uint amountOut, uint amountInMax, address[] calldata path, address to, uint deadline)
-        args = [recipient, `0x${amount.raw.toString(16)}`]
-        value = '0x0'
+        console.log("TRADE PARAMS", SHOW_NATIVE[chainId], recipient, `0x${amount.raw.toString(16)}`)
+
+        // if currency is ETH the bridge is home, else foreign
+
+        if(SHOW_NATIVE[chainId]) {
+            methodName = 'relayTokens'
+            args = [recipient]
+            value = `0x${amount.raw.toString(16)}`
+        }
+        else {
+            methodName = 'relayTokens'
+            args = [recipient, `0x${amount.raw.toString(16)}`]
+            value = '0x0'
+        }
 
         const swapMethods = []
+
+        console.log(methodName, args, value)
 
         swapMethods.push({
                 methodName,
