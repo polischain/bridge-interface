@@ -1,7 +1,7 @@
 import { ApprovalState, useApproveCallback, useApproveCallbackFromBridge } from '../../hooks/useApproveCallback'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/ButtonLegacy'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonDropdown } from '../../components/ButtonLegacy'
 import Card, { DarkCard, GreyCard } from '../../components/CardLegacy'
 import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, Trade } from 'hadeswap-beta-sdk'
 import Column, { AutoColumn } from '../../components/Column'
@@ -21,6 +21,7 @@ import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } 
 import { useNetworkModalToggle, useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
+import NetworkSwitch from '../../components/NetworkSwitch'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { ArrowDown } from 'react-feather'
@@ -326,6 +327,7 @@ export default function Swap() {
                         swapErrorMessage={swapErrorMessage}
                         onDismiss={handleConfirmDismiss}
                     />
+                    <NetworkSwitch />
                     <AutoColumn gap={'md'}>
 
                         {/*<CurrencyInputPanel*/}
@@ -465,6 +467,8 @@ export default function Swap() {
                     )}
                 </Wrapper>
             </div>
+            <SwapHeader input={chainId?NETWORK_LABEL[chainId]:''} output={chainId?NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain]:''} />
+            
             {!swapIsUnsupported ? (
                 <AdvancedSwapDetailsDropdown trade={undefined} />
             ) : (
