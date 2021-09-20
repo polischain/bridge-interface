@@ -1,6 +1,6 @@
 {
-    "name": "@hadeswap/interface",
-    "description": "Hadeswap Interface",
+    "name": "Bridge",
+    "description": "Polis Bridge",
     "homepage": "",
     "private": true,
     "lint-staged": {

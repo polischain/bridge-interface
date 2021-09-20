@@ -69,7 +69,6 @@ export default function ConfirmSwapModal({
         ) : null
     }, [allowedSlippage, onAcceptChanges, recipient, amount, currency])
 
-    console.log('SHOWAACCEPTCHAONGES', showAcceptChanges)
 
     const modalBottom = useCallback(() => {
         return currency && amount ? (

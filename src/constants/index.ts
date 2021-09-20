@@ -60,40 +60,18 @@ const WRAPPED_NATIVE_ONLY: ChainTokenList = {
     [ChainId.SPARTA]: [WETH[ChainId.SPARTA]]
 }
 
-// Default Ethereum chain tokens
-export const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
-export const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD Coin')
-export const USDT = new Token(1, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
-export const WBTC = new Token(1, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
-
-
-// used to construct intermediary pairs for trading
-export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-    ...WRAPPED_NATIVE_ONLY,
-    [ChainId.MAINNET]: [...WRAPPED_NATIVE_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
-    [ChainId.BSC]: [],
-    [ChainId.SPARTA]: [],
-    [ChainId.MUMBAI]: [],
-}
-
-/**
- * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
- * tokens.
- */
-export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-}
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
     ...WRAPPED_NATIVE_ONLY,
-    [ChainId.MAINNET]: [...WRAPPED_NATIVE_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
+    [ChainId.MAINNET]: [...WRAPPED_NATIVE_ONLY[ChainId.MAINNET]],
 
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     ...WRAPPED_NATIVE_ONLY,
-    [ChainId.MAINNET]: [...WRAPPED_NATIVE_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
+    [ChainId.MAINNET]: [...WRAPPED_NATIVE_ONLY[ChainId.MAINNET]],
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {

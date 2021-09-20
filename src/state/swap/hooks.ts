@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import { useCurrency } from '../../hooks/Tokens'
-import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
@@ -32,7 +31,6 @@ export function useSwapActionHandlers(): {
     const dispatch = useDispatch<AppDispatch>()
     const onCurrencySelection = useCallback(
         (field: Field, currency: Currency) => {
-            console.log("selected acurency", field, currency)
             dispatch(
                 selectCurrency({
                     field,
@@ -50,7 +48,6 @@ export function useSwapActionHandlers(): {
     const onUserInput = useCallback(
         (field: Field, typedValue: string) => {
             dispatch(typeInput({ field, typedValue }))
-            console.log("on user input", field)
         },
         [dispatch]
     )
@@ -127,7 +124,7 @@ export function useDerivedSwapInfo(): {
         recipient
     } = useSwapState()
 
-    console.log('SWAP STATE: ', independentField, typedValue, recipient)
+    // console.log('SWAP STATE: ', independentField, typedValue, recipient)
 
     const inputCurrency = useCurrency(inputCurrencyId)
     // If the chain is native, then force the native coin only
@@ -205,7 +202,7 @@ export function useDerivedSwapInfo(): {
         inputError = i18n._(t`Insufficient ${amountIn.currency.getSymbol(chainId)} balance`)
     }
 
-    console.log("input error: ", inputError)
+    // console.log("input error: ", inputError)
 
     return {
         currencies,

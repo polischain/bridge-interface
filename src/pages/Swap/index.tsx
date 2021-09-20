@@ -19,7 +19,7 @@ import {
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
 import { useNetworkModalToggle, useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
-import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
+// import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
@@ -39,15 +39,11 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import TokenWarningModal from '../../components/TokenWarningModal'
-import TradePrice from '../../components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import swapArrowsAnimationData from '../../assets/animation/swap-arrows.json'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import useENSAddress from '../../hooks/useENSAddress'
-import { useIsTransactionUnsupported } from 'hooks/Trades'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useLingui } from '@lingui/react'
 
@@ -94,12 +90,6 @@ export default function Swap() {
     const independentField = Field.OUTPUT
     const { typedValue, recipient } = useSwapState()
     const { currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
-    const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
-        currencies[Field.INPUT],
-        currencies[Field.OUTPUT],
-        typedValue
-    )
-    const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
     const { address: recipientAddress } = useENSAddress(recipient)
 
     const parsedAmounts = {
@@ -149,9 +139,7 @@ export default function Swap() {
 
     const formattedAmounts = {
         [independentField]: typedValue,
-        [dependentField]: showWrap
-            ? parsedAmounts[independentField]?.toExact() ?? ''
-            : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
+        [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? ''
     }
 
     const route = false
@@ -176,13 +164,6 @@ export default function Swap() {
     // the callback to execute the swap
     const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(currencies[Field.OUTPUT], parsedAmounts[independentField], 0, recipient)
 
-    console.log("SWAPCALLBACK: ",swapCallbackError, recipient)
-
-    // let showETH = chainId?SHOW_NATIVE[chainId]:false
-    //
-    // if(showETH) {
-    //     onCurrencySelection(Field.OUTPUT, ETHER)
-    // }
 
     const handleSwap = useCallback(() => {
         if (!swapCallback) {
@@ -258,8 +239,6 @@ export default function Swap() {
         (approval === ApprovalState.NOT_APPROVED ||
             approval === ApprovalState.PENDING ||
             (approvalSubmitted && approval === ApprovalState.APPROVED))
-
-    console.log('show approve flow: ', !swapInputError, approval)
 
     const handleConfirmDismiss = useCallback(() => {
         setSwapState({ showConfirm: false, currency, amount, attemptingTxn, swapErrorMessage, txHash })
@@ -351,7 +330,7 @@ export default function Swap() {
                             id="swap-currency-output"
                         />
 
-                        {recipient !== null && !showWrap ? (
+                        {recipient !== null ? (
                             <>
                                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                                     <ArrowWrapper clickable={false}>
@@ -375,16 +354,7 @@ export default function Swap() {
                             </ButtonPrimary>
                         ) : !account ? (
                             <ButtonLight onClick={toggleWalletModal}>{i18n._(t`Connect Wallet`)}</ButtonLight>
-                        ) : showWrap ? (
-                            <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                                {wrapInputError ??
-                                    (wrapType === WrapType.WRAP
-                                        ? i18n._(t`Wrap`)
-                                        : wrapType === WrapType.UNWRAP
-                                        ? i18n._(t`Unwrap`)
-                                        : null)}
-                            </ButtonPrimary>
-                        ) : userHasSpecifiedInputOutput && showApproveFlow ? (
+                        )  : userHasSpecifiedInputOutput && showApproveFlow ? (
                             <RowBetween>
                                 <ButtonConfirmed
                                     onClick={approveCallback}

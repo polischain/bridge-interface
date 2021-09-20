@@ -30,7 +30,7 @@ const PARAMS: {
             decimals: 18
         },
         rpcUrls: ['https://sparta-rpc.polis.tech'],
-        blockExplorerUrls: ['sparta-explorer.polis.tech']
+        blockExplorerUrls: ['https://sparta-explorer.polis.tech']
     },
     [ChainId.BSC]: {
         chainId: '0x38',
@@ -41,7 +41,7 @@ const PARAMS: {
             decimals: 18
         },
         rpcUrls: ['https://bsc-dataseed.binance.org'],
-        blockExplorerUrls: ['bscscan.com']
+        blockExplorerUrls: ['https://bscscan.com']
     }
 
 }

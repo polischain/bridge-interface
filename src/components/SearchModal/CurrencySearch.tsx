@@ -68,8 +68,6 @@ export function CurrencySearch({
 
     const allTokens = useAllTokens()
 
-    console.log('map2', allTokens)
-
     // if they input an address, use it
     const isAddressSearch = isAddress(debouncedQuery)
     const searchToken = useToken(debouncedQuery)

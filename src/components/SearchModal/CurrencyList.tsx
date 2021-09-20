@@ -164,9 +164,6 @@ export default function CurrencyList({
 }) {
     const { chainId } = useActiveWeb3React()
 
-    // showETH = chainId?SHOW_NATIVE[chainId]:false
-    //
-    console.log('shoWETH', showETH)
 
     const itemData: (Currency | undefined)[] = useMemo(() => {
         let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
@@ -175,8 +172,6 @@ export default function CurrencyList({
         }
         return formatted
     }, [breakIndex, currencies, showETH])
-
-    console.log('ITEM DATA:', itemData)
 
 
     const theme = useTheme()
