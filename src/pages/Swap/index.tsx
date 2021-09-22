@@ -3,12 +3,13 @@ import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../
 import { AutoRow, RowBetween } from '../../components/Row'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/ButtonLegacy'
 import Card, { DarkCard, GreyCard } from '../../components/CardLegacy'
-import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, Trade } from 'hadeswap-beta-sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, Fraction } from 'hadeswap-beta-sdk'
 import Column, { AutoColumn } from '../../components/Column'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {NETWORK_ICON, NETWORK_LABEL} from '../../constants/networks'
 import {CHAIN_BRIDGES} from '../../constants'
+import { useIsTransactionUnsupported } from 'hooks/Transactions'
 
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import {
@@ -45,6 +46,7 @@ import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import useBridgeParams from '../../hooks/useBridgeParams'
 import { useLingui } from '@lingui/react'
 
 export default function Swap() {
@@ -73,6 +75,8 @@ export default function Swap() {
         })
 
     const { account, chainId } = useActiveWeb3React()
+
+    const params = useBridgeParams()
 
     const theme = useContext(ThemeContext)
 
@@ -268,8 +272,8 @@ export default function Swap() {
         onCurrencySelection
     ])
 
-    // const swapIsUnsupported = useIsTransactionUnsupported(currencies?.INPUT, currencies?.OUTPUT)
-    const swapIsUnsupported = false
+    const swapIsUnsupported = useIsTransactionUnsupported(2, parsedAmounts[independentField])
+    // const swapIsUnsupported = false
 
     console.log("PARAMETERS: ", isValid, account, userHasSpecifiedInputOutput, showApproveFlow)
 
@@ -307,15 +311,6 @@ export default function Swap() {
                     />
                     <AutoColumn gap={'md'}>
 
-                        {/*<CurrencyInputPanel*/}
-                        {/*    showMaxButton={!atMaxAmountInput}*/}
-                        {/*    currency={currencies[Field.INPUT]}*/}
-                        {/*    onUserInput={handleTypeInput}*/}
-                        {/*    onMax={handleMaxInput}*/}
-                        {/*    onCurrencySelect={handleInputSelect}*/}
-                        {/*    otherCurrency={currencies[Field.OUTPUT]}*/}
-                        {/*    id="swap-currency-input"*/}
-                        {/*/>*/}
                         <CurrencyInputPanel
                             value={formattedAmounts[Field.OUTPUT]}
                             // onUserInput={handleTypeOutput}
@@ -348,11 +343,7 @@ export default function Swap() {
                         ) : null}
                     </AutoColumn>
                     <BottomGrouping>
-                        {swapIsUnsupported ? (
-                            <ButtonPrimary disabled={true}>
-                                <TYPE.main mb="4px">{i18n._(t`Unsupported Asset`)}</TYPE.main>
-                            </ButtonPrimary>
-                        ) : !account ? (
+                        {!account ? (
                             <ButtonLight onClick={toggleWalletModal}>{i18n._(t`Connect Wallet`)}</ButtonLight>
                         )  : userHasSpecifiedInputOutput && showApproveFlow ? (
                             <RowBetween>
@@ -397,7 +388,11 @@ export default function Swap() {
                                     </Text>
                                 </ButtonError>
                             </RowBetween>
-                        ) : (
+                        ) : userHasSpecifiedInputOutput && swapIsUnsupported ? (
+                            <ButtonPrimary disabled={true}>
+                                <TYPE.main mb="4px">{i18n._(t`Amount less than min amount required`)}</TYPE.main>
+                            </ButtonPrimary>
+                        ) :(
                             <ButtonError
                                 onClick={() => {
                                 setSwapState({
@@ -411,8 +406,8 @@ export default function Swap() {
 
                                 }}
                                 id="swap-button"
-                                disabled={!isValid || !!swapCallbackError}
-                                error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                                disabled={!isValid || !!swapCallbackError || swapIsUnsupported}
+                                error={isValid && !swapCallbackError && swapIsUnsupported}
                             >
                                 <Text fontSize={20} fontWeight={500}>
                                     { i18n._(t`Bridge`)}
@@ -426,13 +421,13 @@ export default function Swap() {
                         )}
                         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     </BottomGrouping>
-                    {chainId && chainId === ChainId.BSC && (
-                        <div
-                            className="hidden sm:block w-full cursor-pointer pt-4"
-                            onClick={() => toggleNetworkModal()}
-                        >
-                        </div>
-                    )}
+                    {/*{chainId && chainId === ChainId.BSC && (*/}
+                    {/*    <div*/}
+                    {/*        className="hidden sm:block w-full cursor-pointer pt-4"*/}
+                    {/*        onClick={() => toggleNetworkModal()}*/}
+                    {/*    >*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                 </Wrapper>
             </div>
             {!swapIsUnsupported ? (

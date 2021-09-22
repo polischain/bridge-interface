@@ -12,6 +12,8 @@ import {
 } from 'hadeswap-beta-sdk'
 
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
+import  { abi as BridgeForeignABI }  from '../constants/abis/bridge_foreign.json'
+import  { abi as BridgeHomeABI }  from '../constants/abis/bridge_home.json'
 
 import { Contract } from '@ethersproject/contracts'
 import BORING_HELPER_ABI from '../constants/abis/boring-helper.json'
@@ -23,7 +25,7 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './useActiveWeb3React'
 import { useMemo } from 'react'
-import { BORING_HELPER_ADDRESS } from '../constants'
+import { BORING_HELPER_ADDRESS, BRIDGE_ADDRESS, CHAIN_BRIDGES } from '../constants'
 
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -89,4 +91,14 @@ export function useMulticallContract(): Contract | null {
 export function useBoringHelperContract(): Contract | null {
     const { chainId } = useActiveWeb3React()
     return useContract(chainId && BORING_HELPER_ADDRESS[chainId], BORING_HELPER_ABI, false)
+}
+
+export function useBridgeContract(): Contract | null {
+    const { chainId } = useActiveWeb3React()
+    let ABI = BridgeHomeABI;
+    // If the other chain is native, this one is the foreign one
+    if(chainId && CHAIN_BRIDGES[chainId].isNative) {
+        ABI = BridgeForeignABI
+    }
+    return useContract(chainId && BRIDGE_ADDRESS[chainId], ABI, false)
 }
