@@ -5,6 +5,7 @@ import BscNet from '../../assets/networks/bsc-network.jpg'
 import PolisNet from '../../assets/networks/polis.svg'
 import MumbaiNet from '../../assets/networks/polis.svg'
 import MainNet from '../../assets/networks/polis.svg'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { ChainId } from 'hadeswap-beta-sdk'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
@@ -17,7 +18,8 @@ import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 import { useLingui } from '@lingui/react'
 
-const PARAMS: {
+
+export const PARAMS: {
     [chainId in ChainId]?: {
         chainId: string
         chainName: string
@@ -54,7 +56,7 @@ const PARAMS: {
     },
     [ChainId.MAINNET]: {
         chainId: '0x518AF',
-        chainName: 'Polis',
+        chainName: 'Olympus',
         nativeCurrency: {
             name: 'Polis',
             symbol: 'POLIS',
@@ -77,17 +79,21 @@ const PARAMS: {
 
 }
 
-const ExtendedStyledMenuButton = styled(StyledMenuButton)`
+export const ExtendedStyledMenuButton = styled(StyledMenuButton)`
+    display: inline;
     border: 2px solid rgb(23, 21, 34);
     font-size: 1.25rem;
-    height: 40px;
+    //width: auto;
+    height: 7rem;
     padding: 0;
+    align:left;
+    text-align: left;
     &:hover {
         border-color: rgb(33, 34, 49);
     }
 `
 
-const ExtendedMenuFlyout = styled(MenuFlyout)`
+export const ExtendedMenuFlyout = styled(MenuFlyout)`
     min-width: 10rem;
     ${({ theme }) => theme.mediaWidth.upToMedium`
     max-height: 232px;
@@ -97,7 +103,7 @@ const ExtendedMenuFlyout = styled(MenuFlyout)`
   `};
 `
 
-const MenuItem = styled.span`
+export const MenuItem = styled.span`
     align-items: center;
     flex: 1;
     //display: flex;
@@ -114,18 +120,26 @@ const MenuItem = styled.span`
     }
 `
 
-const MenuItemLogo = styled.img`
+export const MenuItemLogo = styled.img`
     display: inline;
     margin-right: 0.625rem;
     width: 20px;
     height: 20px;
 `
 
-const MenuButtonFlag = styled.img`
-    width: 22px;
-    height: 22px;
+export const MenuButtonLogo = styled.img`
+    display: inline;
+    width: 5rem;
+    height: 5rem;
+    padding: 1rem 1rem;
 `
-const NETS: { [x: string]: { logo: string; net: string; id: number } } = {
+
+export const MenuText = styled.span`
+    display: inline;
+`
+
+
+export const NETS: { [x: string]: { logo: string; net: string; id: ChainId } } = {
     bsc: {
         logo: BscNet,
         net: 'BSC',
@@ -148,16 +162,25 @@ const NETS: { [x: string]: { logo: string; net: string; id: number } } = {
     }
 }
 
+export const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
+    margin: 0 0.25rem 0 0.5rem;
+    height: 35%;
+
+    path {
+        stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+        stroke-width: 1.5px;
+    }
+`
+
 function NetworkSwitch() {
     const { i18n } = useLingui()
 
     const node = useRef<HTMLDivElement>(null)
-    // TODO! Open selects the network
     const open = useModalOpen(ApplicationModal.BRIDGE)
     const toggle = useToggleModal(ApplicationModal.BRIDGE)
     useOnClickOutside(node, open ? toggle : undefined)
 
-    const { account, library,  chainId } = useActiveWeb3React()
+    const { account, library, chainId } = useActiveWeb3React()
 
     const onClick = (key: ChainId) => {
         const params = PARAMS[key]
@@ -168,9 +191,14 @@ function NetworkSwitch() {
     return (
         <StyledMenu ref={node}>
             <ExtendedStyledMenuButton onClick={toggle}>
-                <MenuButtonFlag src={chainId ? NETWORK_ICON[chainId] : ''} alt={chainId ? NETWORK_LABEL[chainId] : ''} />
-                {i18n._(`Set bridge to network -> `)}
-                {chainId ? NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain] : ''}
+
+                <div className="flex items-center">
+                    <MenuButtonLogo src={chainId ? NETWORK_ICON[chainId] : ''} alt={chainId ? NETWORK_LABEL[chainId] : ''} />
+                    <MenuText>
+                        {chainId ? NETWORK_LABEL[chainId] : ''}
+                    </MenuText>
+                    <StyledDropDown selected={!open} />
+                </div>
             </ExtendedStyledMenuButton>
             {open && (
                 <ExtendedMenuFlyout>

@@ -22,6 +22,7 @@ import { useNetworkModalToggle, useToggleSettingsMenu, useWalletModalToggle } fr
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
 import NetworkSwitch from '../../components/NetworkSwitch'
+import NetworkSwitchTo from '../../components/NetworkSwitchTo'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { ArrowDown } from 'react-feather'
@@ -312,7 +313,6 @@ export default function Swap() {
             />
             <SwapPoolTabs active={'swap'} />
             <div className="bg-dark-900 shadow-swap-blue-glow w-full max-w-2xl rounded">
-                <SwapHeader input={chainId?NETWORK_LABEL[chainId]:''} output={chainId?NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain]:''} />
                 <Wrapper id="swap-page">
                     <ConfirmSwapModal
                         isOpen={showConfirm}
@@ -329,16 +329,6 @@ export default function Swap() {
                     />
                     <NetworkSwitch />
                     <AutoColumn gap={'md'}>
-
-                        {/*<CurrencyInputPanel*/}
-                        {/*    showMaxButton={!atMaxAmountInput}*/}
-                        {/*    currency={currencies[Field.INPUT]}*/}
-                        {/*    onUserInput={handleTypeInput}*/}
-                        {/*    onMax={handleMaxInput}*/}
-                        {/*    onCurrencySelect={handleInputSelect}*/}
-                        {/*    otherCurrency={currencies[Field.OUTPUT]}*/}
-                        {/*    id="swap-currency-input"*/}
-                        {/*/>*/}
                         <CurrencyInputPanel
                             value={formattedAmounts[Field.OUTPUT]}
                             // onUserInput={handleTypeOutput}
@@ -465,6 +455,7 @@ export default function Swap() {
                         >
                         </div>
                     )}
+                    <NetworkSwitchTo />
                 </Wrapper>
             </div>
             <SwapHeader input={chainId?NETWORK_LABEL[chainId]:''} output={chainId?NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain]:''} />
