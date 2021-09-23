@@ -21,15 +21,9 @@ function App(): JSX.Element {
     )
 
     useEffect(() => {
-        if (pathname === '/trade') {
-            setWrapperClassList(
-                'flex flex-col flex-1 items-center justify-start w-screen h-full overflow-y-auto overflow-x-hidden z-0'
-            )
-        } else {
             setWrapperClassList(
                 'flex flex-col flex-1 items-center justify-start w-screen h-full overflow-y-auto overflow-x-hidden z-0 pt-4 sm:pt-8 px-4 md:pt-10 pb-20'
             )
-        }
     }, [pathname])
 
     useEffect(() => {

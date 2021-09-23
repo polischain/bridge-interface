@@ -1,4 +1,4 @@
-import { ChainId, Currency, currencyEquals, ETHER, Token } from 'hadeswap-beta-sdk'
+import { ChainId, Currency, currencyEquals, POLIS, Token } from 'hadeswap-beta-sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -44,13 +44,13 @@ export default function CommonBases({
             <AutoRow gap="4px">
                 <BaseWrapper
                     onClick={() => {
-                        if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
-                            onSelect(ETHER)
+                        if (!selectedCurrency || !currencyEquals(selectedCurrency, POLIS)) {
+                            onSelect(POLIS)
                         }
                     }}
-                    disable={selectedCurrency === ETHER}
+                    disable={selectedCurrency === POLIS}
                 >
-                    <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
+                    <CurrencyLogo currency={POLIS} style={{ marginRight: 8 }} />
                     <Text fontWeight={500} fontSize={16}>
                         {Currency.getNativeCurrencySymbol(chainId)}
                     </Text>

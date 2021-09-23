@@ -3,12 +3,13 @@ import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../
 import { AutoRow, RowBetween } from '../../components/Row'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonDropdown } from '../../components/ButtonLegacy'
 import Card, { DarkCard, GreyCard } from '../../components/CardLegacy'
-import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, Trade } from 'hadeswap-beta-sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, Fraction } from 'hadeswap-beta-sdk'
 import Column, { AutoColumn } from '../../components/Column'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {NETWORK_ICON, NETWORK_LABEL} from '../../constants/networks'
 import {CHAIN_BRIDGES} from '../../constants'
+import { useIsTransactionUnsupported } from 'hooks/Transactions'
 
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import {
@@ -19,7 +20,6 @@ import {
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
 import { useNetworkModalToggle, useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
-import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
 import NetworkSwitch from '../../components/NetworkSwitch'
 import NetworkSwitchTo from '../../components/NetworkSwitchTo'
@@ -41,15 +41,11 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import TokenWarningModal from '../../components/TokenWarningModal'
-import TradePrice from '../../components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import swapArrowsAnimationData from '../../assets/animation/swap-arrows.json'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import useENSAddress from '../../hooks/useENSAddress'
-import { useIsTransactionUnsupported } from 'hooks/Trades'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useLingui } from '@lingui/react'
 
@@ -80,6 +76,8 @@ export default function Swap() {
 
     const { account, chainId } = useActiveWeb3React()
 
+    // const params = useBridgeParams()
+
     const theme = useContext(ThemeContext)
 
     // toggle wallet when disconnected
@@ -96,12 +94,6 @@ export default function Swap() {
     const independentField = Field.OUTPUT
     const { typedValue, recipient } = useSwapState()
     const { currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
-    const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
-        currencies[Field.INPUT],
-        currencies[Field.OUTPUT],
-        typedValue
-    )
-    const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
     const { address: recipientAddress } = useENSAddress(recipient)
 
     const parsedAmounts = {
@@ -151,13 +143,9 @@ export default function Swap() {
 
     const formattedAmounts = {
         [independentField]: typedValue,
-        [dependentField]: showWrap
-            ? parsedAmounts[independentField]?.toExact() ?? ''
-            : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
+        [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? ''
     }
 
-    const route = false
-    const noRoute = !route
 
     // check whether the user has approved the router on the input token
     const [approval, approveCallback] = useApproveCallbackFromBridge(parsedAmounts[Field.OUTPUT] )
@@ -178,13 +166,6 @@ export default function Swap() {
     // the callback to execute the swap
     const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(currencies[Field.OUTPUT], parsedAmounts[independentField], 0, recipient)
 
-    console.log("SWAPCALLBACK: ",swapCallbackError, recipient)
-
-    // let showETH = chainId?SHOW_NATIVE[chainId]:false
-    //
-    // if(showETH) {
-    //     onCurrencySelection(Field.OUTPUT, ETHER)
-    // }
 
     const handleSwap = useCallback(() => {
         if (!swapCallback) {
@@ -261,8 +242,6 @@ export default function Swap() {
             approval === ApprovalState.PENDING ||
             (approvalSubmitted && approval === ApprovalState.APPROVED))
 
-    console.log('show approve flow: ', !swapInputError, approval)
-
     const handleConfirmDismiss = useCallback(() => {
         setSwapState({ showConfirm: false, currency, amount, attemptingTxn, swapErrorMessage, txHash })
         // if there was a tx hash, we want to clear the input
@@ -291,8 +270,9 @@ export default function Swap() {
         onCurrencySelection
     ])
 
-    // const swapIsUnsupported = useIsTransactionUnsupported(currencies?.INPUT, currencies?.OUTPUT)
-    const swapIsUnsupported = false
+    // validBridgeAmount is an object with fields daily, min, max. If one of these is true, the tx will fail
+    const invalidBridgeAmount = useIsTransactionUnsupported(parsedAmounts[independentField])
+    const unsupportedBridge = invalidBridgeAmount.min || invalidBridgeAmount.max || invalidBridgeAmount.daily
 
     console.log("PARAMETERS: ", isValid, account, userHasSpecifiedInputOutput, showApproveFlow)
 
@@ -343,7 +323,7 @@ export default function Swap() {
                             id="swap-currency-output"
                         />
 
-                        {recipient !== null && !showWrap ? (
+                        {recipient !== null ? (
                             <>
                                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                                     <ArrowWrapper clickable={false}>
@@ -361,22 +341,9 @@ export default function Swap() {
                         ) : null}
                     </AutoColumn>
                     <BottomGrouping>
-                        {swapIsUnsupported ? (
-                            <ButtonPrimary disabled={true}>
-                                <TYPE.main mb="4px">{i18n._(t`Unsupported Asset`)}</TYPE.main>
-                            </ButtonPrimary>
-                        ) : !account ? (
+                        {!account ? (
                             <ButtonLight onClick={toggleWalletModal}>{i18n._(t`Connect Wallet`)}</ButtonLight>
-                        ) : showWrap ? (
-                            <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                                {wrapInputError ??
-                                    (wrapType === WrapType.WRAP
-                                        ? i18n._(t`Wrap`)
-                                        : wrapType === WrapType.UNWRAP
-                                        ? i18n._(t`Unwrap`)
-                                        : null)}
-                            </ButtonPrimary>
-                        ) : userHasSpecifiedInputOutput && showApproveFlow ? (
+                        )  : userHasSpecifiedInputOutput && showApproveFlow ? (
                             <RowBetween>
                                 <ButtonConfirmed
                                     onClick={approveCallback}
@@ -419,7 +386,19 @@ export default function Swap() {
                                     </Text>
                                 </ButtonError>
                             </RowBetween>
-                        ) : (
+                        ) : userHasSpecifiedInputOutput && invalidBridgeAmount.min ? (
+                            <ButtonPrimary disabled={true}>
+                                <TYPE.main mb="4px">{i18n._(t`Too low Amount`)}</TYPE.main>
+                            </ButtonPrimary>
+                        ): userHasSpecifiedInputOutput && invalidBridgeAmount.max ? (
+                            <ButtonPrimary disabled={true}>
+                                <TYPE.main mb="4px">{i18n._(t`Too High Amount`)}</TYPE.main>
+                            </ButtonPrimary>
+                        ): userHasSpecifiedInputOutput && invalidBridgeAmount.daily ? (
+                            <ButtonPrimary disabled={true}>
+                                <TYPE.main mb="4px">{i18n._(t`Exceeded daily amount`)}</TYPE.main>
+                            </ButtonPrimary>
+                        ):(
                             <ButtonError
                                 onClick={() => {
                                 setSwapState({
@@ -433,8 +412,8 @@ export default function Swap() {
 
                                 }}
                                 id="swap-button"
-                                disabled={!isValid || !!swapCallbackError}
-                                error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                                disabled={!isValid || !!swapCallbackError || unsupportedBridge}
+                                error={isValid && !swapCallbackError && unsupportedBridge}
                             >
                                 <Text fontSize={20} fontWeight={500}>
                                     { i18n._(t`Bridge`)}
@@ -448,26 +427,22 @@ export default function Swap() {
                         )}
                         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     </BottomGrouping>
-                    {chainId && chainId === ChainId.BSC && (
-                        <div
-                            className="hidden sm:block w-full cursor-pointer pt-4"
-                            onClick={() => toggleNetworkModal()}
-                        >
-                        </div>
-                    )}
+                    {/*{chainId && chainId === ChainId.BSC && (*/}
+                    {/*    <div*/}
+                    {/*        className="hidden sm:block w-full cursor-pointer pt-4"*/}
+                    {/*        onClick={() => toggleNetworkModal()}*/}
+                    {/*    >*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                     <NetworkSwitchTo />
                 </Wrapper>
             </div>
-            <SwapHeader input={chainId?NETWORK_LABEL[chainId]:''} output={chainId?NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain]:''} />
-            
-            {!swapIsUnsupported ? (
-                <AdvancedSwapDetailsDropdown trade={undefined} />
-            ) : (
+            {
                 <UnsupportedCurrencyFooter
-                    show={swapIsUnsupported}
-                    currencies={[currencies.INPUT, currencies.OUTPUT]}
+                    show={userHasSpecifiedInputOutput && unsupportedBridge}
+                    currencies={currencies.OUTPUT}
                 />
-            )}
+            }
         </>
     )
 }

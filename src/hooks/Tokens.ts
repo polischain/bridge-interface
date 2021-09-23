@@ -1,5 +1,5 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, ETHER, Token, currencyEquals } from 'hadeswap-beta-sdk'
+import { Currency, POLIS, Token, currencyEquals } from 'hadeswap-beta-sdk'
 import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { filterTokens } from '../components/SearchModal/filtering'
@@ -55,7 +55,6 @@ export function useDefaultTokens(): { [address: string]: Token } {
 
 export function useAllTokens(): { [address: string]: Token } {
     const allTokens = useCombinedActiveList()
-    console.log('all tokens:', allTokens )
     return useTokensFromMap(allTokens, true)
 }
 
@@ -192,5 +191,5 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
     const isETH = currencyId?.toUpperCase() === 'ETH'
     const token = useToken(isETH ? undefined : currencyId)
-    return isETH ? ETHER : token
+    return isETH ? POLIS : token
 }

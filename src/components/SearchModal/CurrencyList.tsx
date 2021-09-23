@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from 'hadeswap-beta-sdk'
+import { Currency, CurrencyAmount, currencyEquals, POLIS, Token } from 'hadeswap-beta-sdk'
 import { SHOW_NATIVE } from '../../constants'
 import { LightGreyCard } from 'components/CardLegacy'
 import QuestionHelper from 'components/QuestionHelper'
@@ -23,7 +23,7 @@ import ImportRow from './ImportRow'
 import { MenuItem } from './styleds'
 
 function currencyKey(currency: Currency): string {
-    return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
+    return currency instanceof Token ? currency.address : currency === POLIS ? 'POLIS' : ''
 }
 
 const StyledBalanceText = styled(Text)`
@@ -164,19 +164,14 @@ export default function CurrencyList({
 }) {
     const { chainId } = useActiveWeb3React()
 
-    // showETH = chainId?SHOW_NATIVE[chainId]:false
-    //
-    console.log('shoWETH', showETH)
 
     const itemData: (Currency | undefined)[] = useMemo(() => {
-        let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
+        let formatted: (Currency | undefined)[] = showETH ? [Currency.POLIS, ...currencies] : currencies
         if (breakIndex !== undefined) {
             formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
         }
         return formatted
     }, [breakIndex, currencies, showETH])
-
-    console.log('ITEM DATA:', itemData)
 
 
     const theme = useTheme()

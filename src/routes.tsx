@@ -1,37 +1,24 @@
-import { ChainId } from 'hadeswap-beta-sdk'
 import React from 'react'
 import { Redirect, Route, RouteComponentProps, Switch, useLocation } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks/useActiveWeb3React'
 import Swap from './pages/Swap'
 import {
-    OpenClaimAddressModalAndRedirectToSwap,
-    RedirectHashRoutes,
     RedirectPathToSwapOnly,
-    RedirectToSwap
 } from './pages/Swap/redirects'
-import Transactions from './pages/Transactions'
 
 function Routes(): JSX.Element {
-    const { chainId } = useActiveWeb3React()
     return (
         <Switch>
 
             {/* Pages */}
-            <Route exact strict path="/trade" component={Swap} />
-            <Route exact strict path="/swap" component={Swap} />
-            <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-            <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-            <Route exact strict path="/transactions" component={Transactions} />
+            <Route exact strict path="/transfer" component={Swap} />
             {/* Redirects for app routes */}
             <Route
                 exact
                 strict
-                path="/token/:address"
-                render={({
-                    match: {
-                        params: { address }
-                    }
-                }) => <Redirect to={`/swap/${address}`} />}
+                path="/swap"
+                render={(
+                ) => <Redirect to={`/transfer`} />}
             />
 
             {/* Catch all */}

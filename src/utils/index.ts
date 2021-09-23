@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Percent, Token, ChainId, ROUTER_ADDRESS } from 'hadeswap-beta-sdk'
+import { Currency, CurrencyAmount, POLIS, JSBI, Percent, Token, ChainId, ROUTER_ADDRESS } from 'hadeswap-beta-sdk'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BRIDGE_ADDRESS, SHOW_NATIVE } from '../constants'
 import { AddressZero } from '@ethersproject/constants'
@@ -479,6 +479,6 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-    if (currency === ETHER) return true
+    if (currency === POLIS) return true
     return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }

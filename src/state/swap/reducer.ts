@@ -71,7 +71,6 @@ export default createReducer<SwapState>(initialState, builder =>
             }
         })
         .addCase(typeInput, (state, { payload: { field, typedValue } }) => {
-            console.log('case??')
             return {
                 ...state,
                 independentField: field,

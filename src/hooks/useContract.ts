@@ -12,6 +12,8 @@ import {
 } from 'hadeswap-beta-sdk'
 
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
+import  { abi as BridgeForeignABI }  from '../constants/abis/bridge_foreign.json'
+import  { abi as BridgeHomeABI }  from '../constants/abis/bridge_home.json'
 
 import { Contract } from '@ethersproject/contracts'
 import BORING_HELPER_ABI from '../constants/abis/boring-helper.json'
@@ -19,17 +21,11 @@ import ENS_ABI from '../constants/abis/ens-registrar.json'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
-import FACTORY_ABI from '../constants/abis/factory.json'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import MASTERCHEF_ABI from '../constants/abis/masterchef.json'
-import MINICHEFV2_ABI from '../constants/abis/miniChefV2.json'
-import ROUTER_ABI from '../constants/abis/router.json'
-import TIMELOCK_ABI from '../constants/abis/timelock.json'
 import WETH_ABI from '../constants/abis/weth.json'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './useActiveWeb3React'
 import { useMemo } from 'react'
-import { BORING_HELPER_ADDRESS } from '../constants'
+import { BORING_HELPER_ADDRESS, BRIDGE_ADDRESS, CHAIN_BRIDGES } from '../constants'
 
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -85,10 +81,6 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
     return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
 }
 
-export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-    return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
-}
-
 
 export function useMulticallContract(): Contract | null {
     const { chainId } = useActiveWeb3React()
@@ -96,40 +88,17 @@ export function useMulticallContract(): Contract | null {
 }
 
 
-export function useMasterChefContract(withSignerIfPossible?: boolean): Contract | null {
-    const { chainId } = useActiveWeb3React()
-    return useContract(chainId && MASTERCHEF_ADDRESS[chainId], MASTERCHEF_ABI, withSignerIfPossible)
-}
-
-export function useMiniChefV2Contract(withSignerIfPossible?: boolean): Contract | null {
-    const { chainId } = useActiveWeb3React()
-    let address: string | undefined
-    if (chainId) {
-        switch (chainId) {
-            case ChainId.MAINNET:
-                address = '0x0769fd68dFb93167989C6f7254cd0D766Fb2841F'
-                break
-        }
-    }
-    return useContract(address, MINICHEFV2_ABI, withSignerIfPossible)
-}
-
-export function useFactoryContract(): Contract | null {
-    const { chainId } = useActiveWeb3React()
-    return useContract(chainId && FACTORY_ADDRESS[chainId], FACTORY_ABI, false)
-}
-
-export function useRouterContract(): Contract | null {
-    const { chainId } = useActiveWeb3React()
-    return useContract(chainId && ROUTER_ADDRESS[chainId], ROUTER_ABI, false)
-}
-
-export function useTimelockContract(): Contract | null {
-    const { chainId } = useActiveWeb3React()
-    return useContract(chainId && TIMELOCK_ADDRESS[chainId], TIMELOCK_ABI, false)
-}
-
 export function useBoringHelperContract(): Contract | null {
     const { chainId } = useActiveWeb3React()
     return useContract(chainId && BORING_HELPER_ADDRESS[chainId], BORING_HELPER_ABI, false)
+}
+
+export function useBridgeContract(): Contract | null {
+    const { chainId } = useActiveWeb3React()
+    let ABI = BridgeHomeABI;
+    // If the other chain is native, this one is the foreign one
+    if(chainId && CHAIN_BRIDGES[chainId].isNative) {
+        ABI = BridgeForeignABI
+    }
+    return useContract(chainId && BRIDGE_ADDRESS[chainId], ABI, false)
 }

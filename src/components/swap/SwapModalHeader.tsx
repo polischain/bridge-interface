@@ -80,39 +80,6 @@ export default function SwapModalHeader({
                     </Text>
                 </RowFixed>
             </RowBetween>
-            {showAcceptChanges ? (
-                <SwapShowAcceptChanges justify="flex-start" gap={'0px'}>
-                    <RowBetween>
-                        <RowFixed>
-                            <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-                            <TYPE.main color={theme.primary1}> {i18n._(t`Price Updated`)}</TYPE.main>
-                        </RowFixed>
-                        <ButtonPrimary
-                            style={{
-                                padding: '.5rem',
-                                width: 'fit-content',
-                                fontSize: '0.825rem',
-                                borderRadius: '12px'
-                            }}
-                            onClick={onAcceptChanges}
-                        >
-                            {i18n._(t`Accept`)}
-                        </ButtonPrimary>
-                    </RowBetween>
-                </SwapShowAcceptChanges>
-            ) : null}
-            <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
-                 <TYPE.italic textAlign="left" style={{ width: '100%' }}>
-                        <Trans>
-                            Output is estimated. You will receive at least{' '}
-                            <b>
-                                {amount?.toSignificant(6)}{' '}
-                                {currency.getSymbol(chainId)}
-                            </b>{' '}
-                            or the transaction will revert.
-                        </Trans>
-                    </TYPE.italic>
-            </AutoColumn>
             {recipient !== null ? (
                 <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
                     <TYPE.main>

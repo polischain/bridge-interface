@@ -1,4 +1,4 @@
-import { ChainId, Currency, ETHER, Token } from 'hadeswap-beta-sdk'
+import { ChainId, Currency, POLIS, Token } from 'hadeswap-beta-sdk'
 import React, { useMemo } from 'react'
 import Logo from '../Logo'
 
@@ -53,7 +53,7 @@ export default function CurrencyLogo({
     const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
     const srcs: string[] = useMemo(() => {
-        if (currency === ETHER) return []
+        if (currency === POLIS) return []
 
         if (currency instanceof Token) {
             if (currency instanceof WrappedTokenInfo) {
@@ -65,7 +65,7 @@ export default function CurrencyLogo({
         return []
     }, [chainId, currency, uriLocations])
 
-    if (currency === ETHER && chainId) {
+    if (currency === POLIS && chainId) {
         return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} />
     }
 

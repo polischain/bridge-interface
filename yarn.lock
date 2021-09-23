@@ -10479,10 +10479,10 @@ hadeswap-beta-data@1.1.3:
     subscriptions-transport-ws "0.9.16"
     ws "7.2.0"
 
-hadeswap-beta-sdk@1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/hadeswap-beta-sdk/-/hadeswap-beta-sdk-1.3.1.tgz#901af6dbf602766e5c8bcef03e56dbcd948ad9db"
-  integrity sha512-CGcAiNsL9/n4zmzRbmhXogFqvvdxubVlAYpRxXKl/ZOFtAwQKecyoaIjW7XrhrD0OP50iz8AtM+ouQ4+nuI8Wg==
+hadeswap-beta-sdk@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/hadeswap-beta-sdk/-/hadeswap-beta-sdk-1.4.2.tgz#abca7d2d94110ed84d4722873894b403ecb90599"
+  integrity sha512-mZTX0ykaGKHHMSw8mPxFB86Knnh57HIyBtxVgAwFQpm0YCktA+Avotn87oiVbuhJlbGgQOqU3JpwpVYrok1Wew==
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"
