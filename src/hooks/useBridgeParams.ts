@@ -15,13 +15,13 @@ import useAPI from './useAPI'
 
 
 const useBridgeParams = () => {
-    const [params, setParams] = useState<{ dailyLimit: Fraction, minPerTx: Fraction, maxPerTx: Fraction, isInitialized: boolean }  | undefined>()
+    const [params, setParams] = useState<{ dailyLimit: Fraction, minPerTx: Fraction, maxPerTx: Fraction, isInitialized: boolean, dailyAllowance:Fraction }  | undefined>()
     const { account, chainId } = useActiveWeb3React()
     const bridgeContract = useBridgeContract()
-
+    const spent = useAPI()
 
     const fetchAllParams = useCallback(async () => {
-        if(!bridgeContract){
+        if(!bridgeContract ){
             return
         }
         // Some day we will use subgraph on this one
@@ -49,9 +49,14 @@ const useBridgeParams = () => {
 
 
         const isInitialized = await bridgeContract?.isInitialized()
-        const dailyLimit = await bridgeContract?.dailyLimit()
+        const dailyLimit: BigNumber = await bridgeContract?.dailyLimit()
         const maxPerTx = await bridgeContract?.maxPerTx()
         const minPerTx = await bridgeContract?.minPerTx()
+        let dailySpent = BigNumber.from(0)
+
+        // if(spent){
+            dailySpent = dailyLimit.sub(spent??0)
+        // }
 
         // console.log("WHYSAME", bridgeContract, dailyLimit, maxPerTx, minPerTx)
 
@@ -60,7 +65,8 @@ const useBridgeParams = () => {
             isInitialized: isInitialized,
             dailyLimit: Fraction.from(dailyLimit, BigNumber.from(10).pow(18)),
             maxPerTx: Fraction.from(maxPerTx, BigNumber.from(10).pow(18)),
-            minPerTx: Fraction.from(minPerTx, BigNumber.from(10).pow(18))
+            minPerTx: Fraction.from(minPerTx, BigNumber.from(10).pow(18)),
+            dailyAllowance: Fraction.from(dailySpent, BigNumber.from(10).pow(18))
         })
 
         // let limit =  Fraction.from(dailyLimit, BigNumber.from(10).pow(18)).toString(18)
@@ -71,11 +77,11 @@ const useBridgeParams = () => {
         // } else {
         //     setFarms({ farms: sorted, userFarms: [] })
         // }
-    }, [account, bridgeContract])
+    }, [account, bridgeContract, spent])
 
     useEffect(() => {
         fetchAllParams()
-    }, [fetchAllParams])
+    }, [spent, bridgeContract])
 
     return params
 }

@@ -6,7 +6,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks/useActiveWeb3React'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { CloseIcon, ExternalLink, TYPE } from 'theme'
 import { getExplorerLink } from 'utils'
@@ -47,15 +47,12 @@ export default function UnsupportedCurrencyFooter({
     show: boolean
     currencies: (Currency | undefined)
 }) {
-    const { chainId } = useActiveWeb3React()
     const [showDetails, setShowDetails] = useState(false)
     const params = useBridgeParams()
 
-    const tokens = chainId && currencies ? wrappedCurrency(currencies, chainId) : undefined
-
-
-    const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
-
+    // useEffect(() => {
+    //     return () => {console.log()}
+    // }, [params])
     return (
         <DetailsFooter show={show}>
             <Modal isOpen={showDetails} onDismiss={() => setShowDetails(false)}>
@@ -76,13 +73,13 @@ export default function UnsupportedCurrencyFooter({
                                 <OutlineCard >
                                     <AutoColumn gap="10px">
                                         <AutoRow gap="5px" align="center">
-                                            <TYPE.body fontWeight={500}>{`Current daily transfer limit: ${params.dailyLimit.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                            <TYPE.body fontWeight={500}>{`Current min amount per transfer: ${params.minPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
                                         </AutoRow>
                                         <AutoRow gap="5px" align="center">
                                             <TYPE.body fontWeight={500}>{`Current max amount per transfer: ${params.maxPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
                                         </AutoRow>
                                         <AutoRow gap="5px" align="center">
-                                            <TYPE.body fontWeight={500}>{`Current min amount per transfer: ${params.minPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                            <TYPE.body fontWeight={500}>{`Current daily amount remaining: ${params.dailyAllowance.toString(18)} ${currencies?.symbol}`}</TYPE.body>
                                         </AutoRow>
                                     </AutoColumn>
                                 </OutlineCard>

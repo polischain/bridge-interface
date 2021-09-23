@@ -100,7 +100,7 @@ export default function Swap() {
     const blockNumber = useBlockNumber()
 
     const { address: recipientAddress } = useENSAddress(recipient)
-    const  spent  = useAPI()
+    // let  spent = useAPI()
 
     const parsedAmounts = {
               [Field.INPUT]: parsedAmount,
@@ -165,6 +165,10 @@ export default function Swap() {
             setApprovalSubmitted(true)
         }
     }, [approval, approvalSubmitted])
+
+    // useEffect(() => {
+    //     spent = useAPI()
+    // }, [account, chainId])
 
     const maxAmountOutput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.OUTPUT])
     const atMaxAmountOutput = Boolean(maxAmountOutput && parsedAmounts[Field.OUTPUT]?.equalTo(maxAmountOutput))

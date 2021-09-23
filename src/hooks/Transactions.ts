@@ -17,17 +17,16 @@ import { Provider } from '@ethersproject/abstract-provider'
 
 
 export function useIsTransactionUnsupported(amountIn?: CurrencyAmount): { daily: boolean; min: boolean; max: boolean } {
-    const unsupportedToken: { [address: string]: Token } = useUnsupportedTokens()
-    const { chainId } = useActiveWeb3React()
     const params = useBridgeParams()
 
     if(!amountIn || !params) {
         return { daily: true, min: true, max: true }
     }
 
-    let result
+
+    console.log("RECEIVEDPARAM", params.dailyAllowance.numerator.toString())
     // Daily check
-    let unsupportedDaily = false
+    let unsupportedDaily = JSBI.lessThanOrEqual(amountIn.raw, JSBI.BigInt(params.dailyAllowance.numerator))
 
     // Min check
     let unsupportedMin
@@ -39,7 +38,7 @@ export function useIsTransactionUnsupported(amountIn?: CurrencyAmount): { daily:
     unsupportedMax = JSBI.lessThanOrEqual(amountIn.raw, JSBI.BigInt(params.maxPerTx.numerator))
 
 
-    return { daily: unsupportedDaily, min: !unsupportedMin, max: !unsupportedMax }
+    return { daily: !unsupportedDaily, min: !unsupportedMin, max: !unsupportedMax }
 }
 
 export function FetchUserTransactions(chainId: ChainId, account:string, provider: Provider, blockNumber: number) {
