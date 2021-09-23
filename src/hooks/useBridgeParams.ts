@@ -9,13 +9,21 @@ import orderBy from 'lodash/orderBy'
 import sushiData from 'hadeswap-beta-data'
 import { useActiveWeb3React } from 'hooks/useActiveWeb3React'
 import { useBridgeContract } from './useContract'
+import useSWR from 'swr'
+import { BRIDGE_SENT_QUERY } from '../constants'
+import useAPI from './useAPI'
+
 
 const useBridgeParams = () => {
     const [params, setParams] = useState<{ dailyLimit: Fraction, minPerTx: Fraction, maxPerTx: Fraction, isInitialized: boolean }  | undefined>()
-    const { account } = useActiveWeb3React()
+    const { account, chainId } = useActiveWeb3React()
     const bridgeContract = useBridgeContract()
 
+
     const fetchAllParams = useCallback(async () => {
+        if(!bridgeContract){
+            return
+        }
         // Some day we will use subgraph on this one
 
 
@@ -24,11 +32,28 @@ const useBridgeParams = () => {
         // maxPerTx
         // minPerTx
 
+        // // estimate limit remaining for user
+        // if(chainId) {
+        //     const { data, error }: any = useSWR(BRIDGE_SENT_QUERY[chainId], url =>
+        //         fetch(url).then(r => r.json())
+        //     )
+        //     if(error){
+        //         console.log(error)
+        //     }
+        //     if(!data){
+        //         console.log(error)
+        //     }
+        //     console.log(data)
+        // }
+
+
 
         const isInitialized = await bridgeContract?.isInitialized()
         const dailyLimit = await bridgeContract?.dailyLimit()
         const maxPerTx = await bridgeContract?.maxPerTx()
         const minPerTx = await bridgeContract?.minPerTx()
+
+        // console.log("WHYSAME", bridgeContract, dailyLimit, maxPerTx, minPerTx)
 
 
         setParams({
@@ -42,7 +67,6 @@ const useBridgeParams = () => {
         //
         // let min = Fraction.from(minPerTx, BigNumber.from(10).pow(18)).toString(18)
         //
-        // console.log('PARAms:', isInitialized, limit, maxPerTx, min)
 
         // } else {
         //     setFarms({ farms: sorted, userFarms: [] })

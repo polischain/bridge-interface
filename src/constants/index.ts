@@ -20,6 +20,19 @@ export const BRIDGE_ADDRESS = {
 
 }
 
+export const BRIDGE_SENT_QUERY = {
+    [ChainId.MAINNET]: { query:'https://sparta-explorer.polis.tech/api?',
+        topic: '0x127650bcfb0ba017401abe4931453a405140a8fd36fece67bae2db174d3fdd63', isBlockScout: true, apiKey:"", blocksPerDay: 0},
+    [ChainId.SPARTA]: { query:'https://sparta-explorer.polis.tech/api?',
+                        topic: '0x127650bcfb0ba017401abe4931453a405140a8fd36fece67bae2db174d3fdd63', isBlockScout: true, apiKey:"", blocksPerDay: 10800},
+    [ChainId.BSC]: { query:'',
+        topic: '0x127650bcfb0ba017401abe4931453a405140a8fd36fece67bae2db174d3fdd63', isBlockScout: false, apiKey:process.env.REACT_APP_BSCSCAN_API_KEY, blocksPerDay: 0},
+    [ChainId.MUMBAI]: { query:'',
+        topic: '0x127650bcfb0ba017401abe4931453a405140a8fd36fece67bae2db174d3fdd63', isBlockScout: false, apiKey:process.env.REACT_APP_POLYGONSCAN_API_KEY, blocksPerDay: 0},
+
+}
+
+
 // Given the selected chainId, returns the other-side-of-the-bridge chainID and if the other side is the native or the foreign
 export const CHAIN_BRIDGES = {
     [ChainId.MUMBAI]: { chain: ChainId.SPARTA, isNative: true },
