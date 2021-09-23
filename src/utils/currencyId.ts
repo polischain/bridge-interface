@@ -1,7 +1,7 @@
-import { Currency, ETHER, Token } from 'hadeswap-beta-sdk'
+import { Currency, POLIS, Token } from 'hadeswap-beta-sdk'
 
 export function currencyId(currency: Currency): string {
-    if (currency === ETHER) return 'ETH'
+    if (currency === POLIS) return 'ETH'
     if (currency instanceof Token) return currency.address
     throw new Error('invalid currency')
 }

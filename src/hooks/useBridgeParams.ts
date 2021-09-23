@@ -11,7 +11,7 @@ import { useActiveWeb3React } from 'hooks/useActiveWeb3React'
 import { useBridgeContract } from './useContract'
 
 const useBridgeParams = () => {
-    const [params, setParams] = useState<any | undefined>()
+    const [params, setParams] = useState<{ dailyLimit: Fraction, minPerTx: Fraction, maxPerTx: Fraction, isInitialized: boolean }  | undefined>()
     const { account } = useActiveWeb3React()
     const bridgeContract = useBridgeContract()
 
@@ -31,13 +31,18 @@ const useBridgeParams = () => {
         const minPerTx = await bridgeContract?.minPerTx()
 
 
-        setParams({ isInitialized: isInitialized, dailyLimit: dailyLimit , maxPerTx: maxPerTx, minPerTx: minPerTx})
+        setParams({
+            isInitialized: isInitialized,
+            dailyLimit: Fraction.from(dailyLimit, BigNumber.from(10).pow(18)),
+            maxPerTx: Fraction.from(maxPerTx, BigNumber.from(10).pow(18)),
+            minPerTx: Fraction.from(minPerTx, BigNumber.from(10).pow(18))
+        })
 
-        let limit =  Fraction.from(dailyLimit, BigNumber.from(10).pow(18)).toString(18)
-
-        let min = Fraction.from(minPerTx, BigNumber.from(10).pow(18)).toString(18)
-
-        console.log('PARAms:', isInitialized, limit, maxPerTx, min)
+        // let limit =  Fraction.from(dailyLimit, BigNumber.from(10).pow(18)).toString(18)
+        //
+        // let min = Fraction.from(minPerTx, BigNumber.from(10).pow(18)).toString(18)
+        //
+        // console.log('PARAms:', isInitialized, limit, maxPerTx, min)
 
         // } else {
         //     setFarms({ farms: sorted, userFarms: [] })

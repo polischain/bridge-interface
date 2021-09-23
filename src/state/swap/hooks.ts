@@ -1,5 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from 'hadeswap-beta-sdk'
+import { Currency, CurrencyAmount, POLIS, JSBI, Token, TokenAmount, Trade } from 'hadeswap-beta-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -34,7 +34,7 @@ export function useSwapActionHandlers(): {
             dispatch(
                 selectCurrency({
                     field,
-                    currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : ''
+                    currencyId: currency instanceof Token ? currency.address : currency === POLIS ? 'ETH' : ''
                 })
             )
         },

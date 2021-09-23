@@ -11,38 +11,28 @@ import useBridgeParams from '../hooks/useBridgeParams'
 import Fraction from '../entities/Fraction'
 
 
-export function useIsTransactionUnsupported(paramType: number, amountIn?: CurrencyAmount, ): boolean {
+export function useIsTransactionUnsupported(amountIn?: CurrencyAmount): { daily: boolean; min: boolean; max: boolean } {
     const unsupportedToken: { [address: string]: Token } = useUnsupportedTokens()
     const { chainId } = useActiveWeb3React()
     const params = useBridgeParams()
 
-    if(!amountIn) {
-        return false
+    if(!amountIn || !params) {
+        return { daily: true, min: true, max: true }
     }
 
+    let result
+    // Daily check
+    let unsupportedDaily = false
+
+    // Min check
+    let unsupportedMin
+    unsupportedMin = JSBI.greaterThanOrEqual(amountIn.raw, JSBI.BigInt(params.minPerTx.numerator))
 
 
-    let paramToCompare = params.dailyLimit
-    let result = true
-    let paramInFormat: string
-    // 0: dailyLimit, 1: maxPerTx, 2: minPerTx
-    switch (paramType) {
-        case 0:
-            paramInFormat = Fraction.from(paramToCompare, BigNumber.from(10).pow(18)).toString(18)
-            result = amountIn.lessThan(paramInFormat)
-            break;
-        case 1:
-            paramToCompare = params.maxPerTx
-            paramInFormat = Fraction.from(paramToCompare, BigNumber.from(10).pow(18)).toString(18)
-            result = amountIn.lessThan(paramInFormat)
-            break;
-        case 2:
-            paramToCompare = params.minPerTx
-            paramInFormat = Fraction.from(paramToCompare, BigNumber.from(10).pow(18)).toString(18)
-            result = JSBI.greaterThanOrEqual(amountIn.raw, JSBI.BigInt(paramToCompare))
-            console.log('min per tx', amountIn, paramToCompare, paramInFormat, result, amountIn.raw, paramToCompare.toFixed(18))
-            break;
-    }
+    // Max check
+    let unsupportedMax
+    unsupportedMax = JSBI.lessThanOrEqual(amountIn.raw, JSBI.BigInt(params.maxPerTx.numerator))
 
-    return !result
+
+    return { daily: unsupportedDaily, min: !unsupportedMin, max: !unsupportedMax }
 }

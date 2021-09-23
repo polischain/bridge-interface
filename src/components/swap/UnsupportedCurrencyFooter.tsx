@@ -12,6 +12,8 @@ import { CloseIcon, ExternalLink, TYPE } from 'theme'
 import { getExplorerLink } from 'utils'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
+import useBridgeParams from '../../hooks/useBridgeParams'
+
 
 const DetailsFooter = styled.div<{ show: boolean }>`
     padding-top: calc(16px + 2rem);
@@ -43,17 +45,14 @@ export default function UnsupportedCurrencyFooter({
     currencies
 }: {
     show: boolean
-    currencies: (Currency | undefined)[]
+    currencies: (Currency | undefined)
 }) {
     const { chainId } = useActiveWeb3React()
     const [showDetails, setShowDetails] = useState(false)
+    const params = useBridgeParams()
 
-    const tokens =
-        chainId && currencies
-            ? currencies.map(currency => {
-                  return wrappedCurrency(currency, chainId)
-              })
-            : []
+    const tokens = chainId && currencies ? wrappedCurrency(currencies, chainId) : undefined
+
 
     const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
 
@@ -67,32 +66,28 @@ export default function UnsupportedCurrencyFooter({
 
                             <CloseIcon onClick={() => setShowDetails(false)} />
                         </RowBetween>
-                        {tokens.map(token => {
-                            return (
-                                token &&
-                                unsupportedTokens &&
-                                Object.keys(unsupportedTokens).includes(token.address) && (
-                                    <OutlineCard key={token.address?.concat('not-supported')}>
-                                        <AutoColumn gap="10px">
-                                            <AutoRow gap="5px" align="center">
-                                                <CurrencyLogo currency={token} size={'24px'} />
-                                                <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
-                                            </AutoRow>
-                                            {chainId && (
-                                                <ExternalLink href={getExplorerLink(chainId, token.address, 'address')}>
-                                                    <AddressText>{token.address}</AddressText>
-                                                </ExternalLink>
-                                            )}
-                                        </AutoColumn>
-                                    </OutlineCard>
-                                )
-                            )
-                        })}
                         <AutoColumn gap="lg">
                             <TYPE.body fontWeight={500}>
                                 Your amount may not be between the Min or Max parameters from the bridge
                             </TYPE.body>
                         </AutoColumn>
+                        {
+                            params && (
+                                <OutlineCard >
+                                    <AutoColumn gap="10px">
+                                        <AutoRow gap="5px" align="center">
+                                            <TYPE.body fontWeight={500}>{`Current daily transfer limit: ${params.dailyLimit.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                        </AutoRow>
+                                        <AutoRow gap="5px" align="center">
+                                            <TYPE.body fontWeight={500}>{`Current max amount per transfer: ${params.maxPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                        </AutoRow>
+                                        <AutoRow gap="5px" align="center">
+                                            <TYPE.body fontWeight={500}>{`Current min amount per transfer: ${params.minPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                        </AutoRow>
+                                    </AutoColumn>
+                                </OutlineCard>
+                            )
+                        }
                     </AutoColumn>
                 </Card>
             </Modal>
