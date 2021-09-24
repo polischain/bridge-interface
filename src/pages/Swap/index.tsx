@@ -271,7 +271,7 @@ export default function Swap() {
     const invalidBridgeAmount = useIsTransactionUnsupported(parsedAmounts[independentField])
     const unsupportedBridge = invalidBridgeAmount.min || invalidBridgeAmount.max || invalidBridgeAmount.daily
 
-    console.log("PARAMETERS: ", isValid, account, userHasSpecifiedInputOutput, showApproveFlow)
+    // console.log("PARAMETERS: ", isValid, account, userHasSpecifiedInputOutput, showApproveFlow)
 
 
     return (

@@ -17,7 +17,9 @@ const useBridgeParams = () => {
 
     const fetchAllParams = useCallback(async () => {
         // Some day we will use subgraph on this one
-
+        if(!bridgeContract){
+            return
+        }
 
         // isInitialized
         // dailyLimit

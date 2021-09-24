@@ -11,14 +11,14 @@ import { Web3Provider } from '@ethersproject/providers'
 // import { BscConnector } from '@binance-chain/bsc-connector'
 
 const RPC = {
-    //[ChainId.MAINNET]: 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
+    [ChainId.MAINNET]: 'https://rpc.polis.tech',
     // [ChainId.ROPSTEN]: 'https://eth-ropsten.alchemyapi.io/v2/cidKix2Xr-snU3f6f6Zjq_rYdalKKHmW',
     [ChainId.BSC]: 'https://bsc-dataseed.binance.org',
     [ChainId.SPARTA]: 'https://sparta-rpc.polis.tech'
 }
 
 export const network = new NetworkConnector({
-    defaultChainId: 56,
+    defaultChainId: 333999,
     urls: RPC
 })
 
@@ -29,7 +29,7 @@ export function getNetworkLibrary(): Web3Provider {
 
 export const injected = new InjectedConnector({
     supportedChainIds: [
-        1, // mainnet
+        333999, // mainnet
         333888, // sparta
         56, // bsc
         80001 // mumbai
@@ -39,7 +39,7 @@ export const injected = new InjectedConnector({
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
     rpc: {
-        [ChainId.BSC]: RPC[ChainId.BSC]
+        [ChainId.MAINNET]: RPC[ChainId.MAINNET]
     },
     bridge: 'https://bridge.walletconnect.org',
     qrcode: true,

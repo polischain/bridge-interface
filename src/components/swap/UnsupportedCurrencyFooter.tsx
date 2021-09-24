@@ -51,8 +51,6 @@ export default function UnsupportedCurrencyFooter({
     const [showDetails, setShowDetails] = useState(false)
     const params = useBridgeParams()
 
-    const tokens = chainId && currencies ? wrappedCurrency(currencies, chainId) : undefined
-
 
     const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
 
@@ -76,13 +74,13 @@ export default function UnsupportedCurrencyFooter({
                                 <OutlineCard >
                                     <AutoColumn gap="10px">
                                         <AutoRow gap="5px" align="center">
-                                            <TYPE.body fontWeight={500}>{`Current daily transfer limit: ${params.dailyLimit.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                            <TYPE.body fontWeight={500}>{`Min amount per transfer: ${params.minPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
                                         </AutoRow>
                                         <AutoRow gap="5px" align="center">
-                                            <TYPE.body fontWeight={500}>{`Current max amount per transfer: ${params.maxPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                            <TYPE.body fontWeight={500}>{`Max amount per transfer: ${params.maxPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
                                         </AutoRow>
                                         <AutoRow gap="5px" align="center">
-                                            <TYPE.body fontWeight={500}>{`Current min amount per transfer: ${params.minPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                            <TYPE.body fontWeight={500}>{`Daily limit: ${params.dailyLimit.toString(18)} ${currencies?.symbol}`}</TYPE.body>
                                         </AutoRow>
                                     </AutoColumn>
                                 </OutlineCard>

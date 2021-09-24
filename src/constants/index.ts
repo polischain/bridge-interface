@@ -13,9 +13,9 @@ export const BORING_HELPER_ADDRESS = {
 }
 
 export const BRIDGE_ADDRESS = {
-    [ChainId.MAINNET]: '',
+    [ChainId.MAINNET]: '0x8B95D92bea3e67796A105c19c524Ee8ef87Bd537',
     [ChainId.SPARTA]: '0x74bBBd046627CE60148197ab836D011c7Cec4D69',
-    [ChainId.BSC]: '',
+    [ChainId.BSC]: '0x1ED9cA7E442a91591AcecFb2D40e843e4FEE00ff',
     [ChainId.MUMBAI]: '0x1ED9cA7E442a91591AcecFb2D40e843e4FEE00ff'
 
 }

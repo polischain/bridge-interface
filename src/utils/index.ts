@@ -364,6 +364,19 @@ const builders = {
             default:
                 return `${prefix}/${type}/${data}`
         }
+    },
+    olympus: (chainName = '', data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+        const prefix = '  https://explorer.polis.tech'
+        switch (type) {
+            case 'transaction':
+                return `${prefix}/tx/${data}`
+            case 'block':
+                return `${prefix}/blocks/${data}`
+            case 'token':
+                return `${prefix}/address/${data}`
+            default:
+                return `${prefix}/${type}/${data}`
+        }
     }
 }
 
@@ -377,7 +390,7 @@ interface ChainObject {
 const chains: ChainObject = {
     [ChainId.MAINNET]: {
         chainName: '',
-        builder: builders.etherscan
+        builder: builders.olympus
     },
     [ChainId.MUMBAI]: {
         chainName: 'mumbai',
