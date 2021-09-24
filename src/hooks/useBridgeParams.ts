@@ -18,10 +18,12 @@ const useBridgeParams = () => {
     const [params, setParams] = useState<{ dailyLimit: Fraction, minPerTx: Fraction, maxPerTx: Fraction, isInitialized: boolean, dailyAllowance:Fraction }  | undefined>()
     const { account, chainId } = useActiveWeb3React()
     const bridgeContract = useBridgeContract()
-    const spent = useAPI()
+    const { spent, isLoading } = useAPI()
 
     const fetchAllParams = useCallback(async () => {
-        if(!bridgeContract ){
+
+        console.log()
+        if(!bridgeContract || !spent){
             return
         }
         // Some day we will use subgraph on this one
@@ -55,7 +57,7 @@ const useBridgeParams = () => {
         let dailySpent = BigNumber.from(0)
 
         // if(spent){
-            dailySpent = dailyLimit.sub(spent??0)
+            dailySpent = dailyLimit.sub(spent)
         // }
 
         // console.log("WHYSAME", bridgeContract, dailyLimit, maxPerTx, minPerTx)
@@ -81,7 +83,7 @@ const useBridgeParams = () => {
 
     useEffect(() => {
         fetchAllParams()
-    }, [spent, bridgeContract])
+    }, [spent, bridgeContract, isLoading])
 
     return params
 }

@@ -11,20 +11,27 @@ import sushiData from 'hadeswap-beta-data'
 import { useActiveWeb3React } from 'hooks/useActiveWeb3React'
 import { useArgentWalletDetectorContract, useBridgeContract } from './useContract'
 import useSWR from 'swr'
-import { BRIDGE_SENT_QUERY, BRIDGE_ADDRESS } from '../constants'
+import { BRIDGE_SENT_QUERY, BRIDGE_ADDRESS, CHAIN_BRIDGES } from '../constants'
 import { ChainId } from 'hadeswap-beta-sdk'
 import { Provider } from '@ethersproject/abstract-provider'
 import  { abi as BridgeForeignABI }  from '../constants/abis/bridge_foreign.json'
 import  { abi as BridgeHomeABI }  from '../constants/abis/bridge_home.json'
 import { ethers } from 'ethers'
 import { useBlockNumber } from '../state/application/hooks'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, AppState } from '../state'
 
 const useAPI = () => {
+    const [isLoading, setIsLoading] = useState(true)
     const [spent, setSpent] = useState<BigNumber  | undefined>()
 
     const blockNumber = useBlockNumber()
     const { account, chainId, library } = useActiveWeb3React()
+    const dispatch = useDispatch<AppDispatch>()
 
+    const state = useSelector<AppState, AppState['transactions']>(state => state.transactions)
+
+    const transactions = chainId ? state[chainId] ?? {} : {}
 
 
     // const chain = chainId??333888
@@ -43,11 +50,11 @@ const useAPI = () => {
             return
         }
 
+        console.log("NO SPENT")
+
         const bridge = BRIDGE_ADDRESS[chainId]
 
-        const inter = new ethers.utils.Interface(BridgeHomeABI);
-
-        console.log('BLOCKblockNumber', blockNumber)
+        const inter = new ethers.utils.Interface(CHAIN_BRIDGES[chainId].isNative? BridgeForeignABI : BridgeHomeABI)
 
         const fromBlock =  blockNumber - BRIDGE_SENT_QUERY[chainId].blocksPerDay
 
@@ -58,54 +65,61 @@ const useAPI = () => {
             query = BRIDGE_SENT_QUERY[chainId].query+`module=logs&action=getLogs&fromBlock=${fromBlock.toString()}&toBlock=latest&topic0=${BRIDGE_SENT_QUERY[chainId].topic}&address=${bridge}`
         }
         else {
-            query = '' + BRIDGE_SENT_QUERY[chainId].apiKey ?? ''
+            console.log(chainId)
+            console.log(BRIDGE_SENT_QUERY[chainId])
+            query = BRIDGE_SENT_QUERY[chainId].query+`module=logs&action=getLogs&fromBlock=${fromBlock.toString()}&toBlock=latest&address=${bridge}&topic0=${BRIDGE_SENT_QUERY[chainId].topic}`
+            + BRIDGE_SENT_QUERY[chainId].apiKey!==""?`&apikey=${BRIDGE_SENT_QUERY[chainId].apiKey}` : ""
         }
 
-        let data = await axios.get(query)
+        console.log(query)
+        console.log('AM I GETTING THE DATA RIGHT?')
+
+        let data
+        try {
+            data = await axios.get(query).then(res => {
+                return res
+            })
+        } catch (e) {
+            console.log(e)
+        }
+
         let spentSum = BigNumber.from(0)
-        console.log(data.data)
-        // TODO: This only works for logs of (addresss, amount)
-        if (data.data && data.data.result && data.data.result.length > 0){
 
-            const pairAddresses = data.data.result
-                .map((tx: any) => {
-                    const decodedInput = inter.parseLog({ data: tx.data, topics: [BRIDGE_SENT_QUERY[chainId].topic]});
-                    console.log(decodedInput)
-                    return decodedInput.args
-                })
+        if(data && data.data && data.data.result) {
+            // TODO: This only works for logs of (addresss, amount)
+            if (data.data.result.length > 0){
 
-            // console.log(pairAddresses)
+                const pairAddresses = data.data.result
+                    .map((tx: any) => {
+                        const decodedInput = inter.parseLog({ data: tx.data, topics: [BRIDGE_SENT_QUERY[chainId].topic]});
+                        console.log(decodedInput)
+                        return decodedInput.args
+                    })
 
-            const userTxs = pairAddresses.filter((tx: any) => {
-                return(tx[0]===account)
-            });
-            console.log("!!!!FILTERESD", userTxs)
+                // console.log(pairAddresses)
 
-            for(let i=0; i<userTxs.length; i++){
-                // console.log(userTxs[i].value)
-                spentSum = spentSum.add(userTxs[i].value??0)
+                const userTxs = pairAddresses.filter((tx: any) => {
+                    return(tx[0]===account)
+                });
+                console.log("!!!!FILTERESD", userTxs)
+
+                for(let i=0; i<userTxs.length; i++){
+                    // console.log(userTxs[i].value)
+                    spentSum = spentSum.add(userTxs[i].value??0)
+                }
+
+                console.log(spentSum.toString())
             }
-
-            // const tokens = data.result
-            //     .filter((tx: any) => {
-            //         return !(
-            //             // !POOL_DENY.includes(pool?.id) &&
-            //             pairs.find((pair: any) => pair?.id === account)
-            //         )
-            //     })
-            // const decodedInput = inter.parseLog({ data: data.result[0].data, topics: [BRIDGE_SENT_QUERY[chain].topic]});
-            // console.log(decodedInput)
-            console.log(spentSum.toString())
-            setSpent(spentSum)
-
         }
+        setSpent(spentSum)
+        setIsLoading(false)
     }
 
     useEffect(() => {
         getAPI()
-    }, [account, chainId])
+    }, [account, chainId, transactions])
 
-    return spent
+    return { spent, isLoading }
 
 }
 

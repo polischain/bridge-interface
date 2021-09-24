@@ -20,7 +20,7 @@ export function useIsTransactionUnsupported(amountIn?: CurrencyAmount): { daily:
     const params = useBridgeParams()
 
     if(!amountIn || !params) {
-        return { daily: true, min: true, max: true }
+        return { daily: false, min: false, max: false }
     }
 
 
