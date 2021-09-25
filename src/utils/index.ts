@@ -397,7 +397,7 @@ const chains: ChainObject = {
         builder: builders.matic
     },
     [ChainId.BSC]: {
-        chainName: 'rinkeby',
+        chainName: '',
         builder: builders.bscscan
     },
     [ChainId.SPARTA]: {
