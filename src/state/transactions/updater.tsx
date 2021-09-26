@@ -30,7 +30,6 @@ export default function Updater(): null {
     const { chainId, library } = useActiveWeb3React()
 
     const lastBlockNumber = useBlockNumber()
-    // const
 
     const dispatch = useDispatch<AppDispatch>()
     const state = useSelector<AppState, AppState['transactions']>(state => state.transactions)
@@ -77,8 +76,6 @@ export default function Updater(): null {
                                 },
                                 hash
                             )
-                            console.log('trigger')
-
                         } else {
                             dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
                         }

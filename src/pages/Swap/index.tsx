@@ -9,7 +9,7 @@ import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {NETWORK_ICON, NETWORK_LABEL} from '../../constants/networks'
 import { BRIDGE_ADDRESS, BRIDGE_SENT_QUERY, CHAIN_BRIDGES } from '../../constants'
-import { useIsTransactionUnsupported, FetchUserTransactions } from 'hooks/Transactions'
+import { useIsTransactionUnsupported} from 'hooks/Transactions'
 
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import {
@@ -289,8 +289,7 @@ export default function Swap() {
 
     }
 
-    console.log("PARAMETERS: ", isValid, account, userHasSpecifiedInputOutput, showApproveFlow)
-
+    // console.log("PARAMETERS: ", isValid, account, userHasSpecifiedInputOutput, showApproveFlow)
 
     return (
         <>

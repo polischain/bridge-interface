@@ -22,35 +22,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../state'
 
 const useAPI = () => {
-    const [isLoading, setIsLoading] = useState(true)
     const [spent, setSpent] = useState<BigNumber  | undefined>()
 
     const blockNumber = useBlockNumber()
-    const { account, chainId, library } = useActiveWeb3React()
-    const dispatch = useDispatch<AppDispatch>()
+
+    const blockNumberState = !!blockNumber
+
+    const { account, chainId } = useActiveWeb3React()
+    // const dispatch = useDispatch<AppDispatch>()
 
     const state = useSelector<AppState, AppState['transactions']>(state => state.transactions)
 
     const transactions = chainId ? state[chainId] ?? {} : {}
 
-
-    // const chain = chainId??333888
-    // estimate limit remaining for user
-
-
-    // const { data, error }: any = useSWR(query, url =>
-    //     fetch(url).then(r => r.json())
-    // )
-    // if(error){
-    //     console.log(error)
-    // }
-
     const getAPI = async () => {
         if(!blockNumber || !chainId || !account){
             return
         }
-
-        console.log("NO SPENT")
 
         const bridge = BRIDGE_ADDRESS[chainId]
 
@@ -65,14 +53,9 @@ const useAPI = () => {
             query = BRIDGE_SENT_QUERY[chainId].query+`module=logs&action=getLogs&fromBlock=${fromBlock.toString()}&toBlock=latest&topic0=${BRIDGE_SENT_QUERY[chainId].topic}&address=${bridge}`
         }
         else {
-            console.log(chainId)
-            console.log(BRIDGE_SENT_QUERY[chainId])
             query = BRIDGE_SENT_QUERY[chainId].query+`module=logs&action=getLogs&fromBlock=${fromBlock.toString()}&toBlock=latest&address=${bridge}&topic0=${BRIDGE_SENT_QUERY[chainId].topic}`
-            + BRIDGE_SENT_QUERY[chainId].apiKey!==""?`&apikey=${BRIDGE_SENT_QUERY[chainId].apiKey}` : ""
+            + (BRIDGE_SENT_QUERY[chainId].apiKey!==""?`&apikey=${BRIDGE_SENT_QUERY[chainId].apiKey}`: "")
         }
-
-        console.log(query)
-        console.log('AM I GETTING THE DATA RIGHT?')
 
         let data
         try {
@@ -86,40 +69,41 @@ const useAPI = () => {
         let spentSum = BigNumber.from(0)
 
         if(data && data.data && data.data.result) {
+            // console.log('DATA:', data)
             // TODO: This only works for logs of (addresss, amount)
-            if (data.data.result.length > 0){
+            // Handle api limit
+            if(data.data.status === '0' || data.data.message === 'NOTOK'){
+                console.log("Max limit reached on API rate. Please refresh the page")
+            }
+            else if (data.data.result.length > 0 && Array.isArray(data.data.result)){
 
-                const pairAddresses = data.data.result
+                const decodedLogs = data.data.result
                     .map((tx: any) => {
                         const decodedInput = inter.parseLog({ data: tx.data, topics: [BRIDGE_SENT_QUERY[chainId].topic]});
-                        console.log(decodedInput)
                         return decodedInput.args
                     })
 
-                // console.log(pairAddresses)
 
-                const userTxs = pairAddresses.filter((tx: any) => {
+                const userTxs = decodedLogs.filter((tx: any) => {
                     return(tx[0]===account)
                 });
-                console.log("!!!!FILTERESD", userTxs)
+                // console.log("Filtered user logs:", userTxs)
 
                 for(let i=0; i<userTxs.length; i++){
                     // console.log(userTxs[i].value)
                     spentSum = spentSum.add(userTxs[i].value??0)
                 }
 
-                console.log(spentSum.toString())
             }
         }
         setSpent(spentSum)
-        setIsLoading(false)
     }
 
     useEffect(() => {
         getAPI()
-    }, [account, chainId, transactions])
+    }, [account, chainId, transactions, blockNumberState])
 
-    return { spent, isLoading }
+    return spent
 
 }
 

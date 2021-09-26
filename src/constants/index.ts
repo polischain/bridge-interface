@@ -13,20 +13,20 @@ export const BORING_HELPER_ADDRESS = {
 }
 
 export const BRIDGE_ADDRESS = {
-    [ChainId.MAINNET]: '',
+    [ChainId.MAINNET]: '0x8B95D92bea3e67796A105c19c524Ee8ef87Bd537',
     [ChainId.SPARTA]: '0x74bBBd046627CE60148197ab836D011c7Cec4D69',
-    [ChainId.BSC]: '',
+    [ChainId.BSC]: '0x1ED9cA7E442a91591AcecFb2D40e843e4FEE00ff',
     [ChainId.MUMBAI]: '0x1ED9cA7E442a91591AcecFb2D40e843e4FEE00ff'
 
 }
 
 export const BRIDGE_SENT_QUERY = {
     [ChainId.MAINNET]: { query:'https://explorer.polis.tech/api?',
-        topic: '0x127650bcfb0ba017401abe4931453a405140a8fd36fece67bae2db174d3fdd63', isBlockScout: true, apiKey:"", blocksPerDay: 0},
+        topic: '0x127650bcfb0ba017401abe4931453a405140a8fd36fece67bae2db174d3fdd63', isBlockScout: true, apiKey:"", blocksPerDay: 17280 },
     [ChainId.SPARTA]: { query:'https://sparta-explorer.polis.tech/api?',
                         topic: '0x127650bcfb0ba017401abe4931453a405140a8fd36fece67bae2db174d3fdd63', isBlockScout: true, apiKey:"", blocksPerDay: 10800},
     [ChainId.BSC]: { query:'https://api.bscscan.com/api?',
-        topic: '0x1d491a427d1f8cc0d447496f300fac39f7306122481d8e663451eb268274146b', isBlockScout: false, apiKey:process.env.REACT_APP_BSCSCAN_API_KEY, blocksPerDay: 0},
+        topic: '0x1d491a427d1f8cc0d447496f300fac39f7306122481d8e663451eb268274146b', isBlockScout: false, apiKey:process.env.REACT_APP_BSCSCAN_API_KEY, blocksPerDay: 28800},
     [ChainId.MUMBAI]: { query:'https://api-testnet.polygonscan.com/api?',
         topic: '0x1d491a427d1f8cc0d447496f300fac39f7306122481d8e663451eb268274146b', isBlockScout: false, apiKey:process.env.REACT_APP_POLYGONSCAN_API_KEY, blocksPerDay: 40000},
 

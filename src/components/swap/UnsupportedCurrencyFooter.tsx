@@ -50,9 +50,7 @@ export default function UnsupportedCurrencyFooter({
 }) {
     const [showDetails, setShowDetails] = useState(false)
     const params = useBridgeParams()
-    const { spent, isLoading } = useAPI()
-
-    console.log('footerloading', isLoading??'')
+    const spent = useAPI()
 
     return (
         <DetailsFooter show={show}>
@@ -80,7 +78,7 @@ export default function UnsupportedCurrencyFooter({
                                             <TYPE.body fontWeight={500}>{`Max amount per transfer: ${params.maxPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
                                         </AutoRow>
                                         {
-                                            !isLoading ? (
+                                            spent ? (
                                                 <AutoRow gap="5px" align="center">
                                                     <TYPE.body fontWeight={500}>{`Current daily amount remaining: ${params.dailyAllowance.toString(18)} ${currencies?.symbol}`}</TYPE.body>
                                                 </AutoRow>

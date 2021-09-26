@@ -66,7 +66,7 @@ function useSwapCallArguments(
         let args: (string | string[])[]
         let value: string
 
-        console.log("TRADE PARAMS", SHOW_NATIVE[chainId], recipient, `0x${amount.raw.toString(16)}`)
+        // console.log("TRADE PARAMS", SHOW_NATIVE[chainId], recipient, `0x${amount.raw.toString(16)}`)
 
         // if currency is ETH the bridge is home, else foreign
 
@@ -83,7 +83,7 @@ function useSwapCallArguments(
 
         const swapMethods = []
 
-        console.log(methodName, args, value)
+        // console.log(methodName, args, value)
 
         swapMethods.push({
                 methodName,
