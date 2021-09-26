@@ -20,7 +20,6 @@ import {
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
 import {
-    useBlockNumber,
     useNetworkModalToggle,
     useToggleSettingsMenu,
     useWalletModalToggle
@@ -50,7 +49,6 @@ import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useLingui } from '@lingui/react'
-import useAPI from '../../hooks/useAPI'
 
 export default function Swap() {
     const { i18n } = useLingui()
@@ -77,7 +75,7 @@ export default function Swap() {
             return !Boolean(token.address in defaultTokens)
         })
 
-    const { account, chainId, library } = useActiveWeb3React()
+    const { account, chainId } = useActiveWeb3React()
 
     // const params = useBridgeParams()
 
@@ -97,10 +95,7 @@ export default function Swap() {
     const independentField = Field.OUTPUT
     const { typedValue, recipient } = useSwapState()
     const { currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
-    const blockNumber = useBlockNumber()
-
     const { address: recipientAddress } = useENSAddress(recipient)
-    // let  spent = useAPI()
 
     const parsedAmounts = {
               [Field.INPUT]: parsedAmount,
@@ -165,10 +160,6 @@ export default function Swap() {
             setApprovalSubmitted(true)
         }
     }, [approval, approvalSubmitted])
-
-    // useEffect(() => {
-    //     spent = useAPI()
-    // }, [account, chainId])
 
     const maxAmountOutput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.OUTPUT])
     const atMaxAmountOutput = Boolean(maxAmountOutput && parsedAmounts[Field.OUTPUT]?.equalTo(maxAmountOutput))
@@ -284,12 +275,8 @@ export default function Swap() {
     const invalidBridgeAmount = useIsTransactionUnsupported(parsedAmounts[independentField])
     const unsupportedBridge = invalidBridgeAmount.min || invalidBridgeAmount.max || invalidBridgeAmount.daily
 
-    if(chainId && account && library && blockNumber){
-        // console.log(FetchUserTransactions(chainId, account, library, blockNumber))
-
-    }
-
     // console.log("PARAMETERS: ", isValid, account, userHasSpecifiedInputOutput, showApproveFlow)
+
 
     return (
         <>

@@ -21,17 +21,6 @@ const PARAMS: {
         blockExplorerUrls: string[]
     }
 } = {
-    [ChainId.SPARTA]: {
-        chainId: '0x51840',
-        chainName: 'Polis',
-        nativeCurrency: {
-            name: 'Polis Token',
-            symbol: 'POLIS',
-            decimals: 18
-        },
-        rpcUrls: ['https://sparta-rpc.polis.tech'],
-        blockExplorerUrls: ['https://sparta-explorer.polis.tech']
-    },
     [ChainId.BSC]: {
         chainId: '0x38',
         chainName: 'BSC',
@@ -42,6 +31,17 @@ const PARAMS: {
         },
         rpcUrls: ['https://bsc-dataseed.binance.org'],
         blockExplorerUrls: ['https://bscscan.com']
+    },
+    [ChainId.MAINNET]: {
+        chainId: '0x518AF',
+        chainName: 'Polis',
+        nativeCurrency: {
+            name: 'Polis',
+            symbol: 'POLIS',
+            decimals: 18
+        },
+        rpcUrls: ['https://rpc.polis.tech'],
+        blockExplorerUrls: ['https://explorer.polis.tech']
     }
 
 }
@@ -62,7 +62,7 @@ export default function NetworkModal(): JSX.Element | null {
 
             <div className="flex flex-col space-y-5 overflow-y-auto">
                 {[
-                    ChainId.SPARTA,
+                    ChainId.MAINNET,
                     ChainId.BSC,
                 ].map((key: ChainId, i: number) => {
                     if (chainId === key) {
