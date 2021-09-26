@@ -49,7 +49,7 @@ function AppBar(): JSX.Element {
                                     </div>
                                     <div className="hidden sm:block sm:ml-4">
                                         <div className="flex space-x-2">
-                                            <NavLink id={`swap-nav-link`} to={'/swap'}>
+                                            <NavLink id={`swap-nav-link`} to={'/transfer'}>
                                                 {i18n._(t`Bridge`)}
                                             </NavLink>
 
@@ -86,7 +86,7 @@ function AppBar(): JSX.Element {
                                         {open ? (
                                             <X title="Close" className="block h-6 w-6" aria-hidden="true" />
                                         ) : (
-                                            <Burger title="Burger" className="block h-6 w-6" aria-hidden="true" />
+                                            <Burger title="Bridge" className="block h-6 w-6" aria-hidden="true" />
                                         )}
                                     </Disclosure.Button>
                                 </div>
@@ -102,7 +102,7 @@ function AppBar(): JSX.Element {
                             >
                                 Dashboard
                             </a> */}
-                                <NavLink id={`swap-nav-link`} to={'/swap'}>
+                                <NavLink id={`swap-nav-link`} to={'/transfer'}>
                                     {i18n._(t`Bridge`)}
                                 </NavLink>
                             </div>

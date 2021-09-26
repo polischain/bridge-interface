@@ -58,50 +58,51 @@ const useAPI = () => {
         }
 
         let data
-        try {
-            data = await axios.get(query).then(res => {
-                return res
-            })
-        } catch (e) {
-            console.log(e)
-        }
+        // try {
+        //     data = await axios.get(query).then(res => {
+        //         return res
+        //     })
+        // } catch (e) {
+        //     console.log(e)
+        // }
 
         let spentSum = BigNumber.from(0)
 
-        if(data && data.data && data.data.result) {
-            // console.log('DATA:', data)
-            // TODO: This only works for logs of (addresss, amount)
-            // Handle api limit
-            if(data.data.status === '0' || data.data.message === 'NOTOK'){
-                console.log("Max limit reached on API rate. Please refresh the page")
-            }
-            else if (data.data.result.length > 0 && Array.isArray(data.data.result)){
-
-                const decodedLogs = data.data.result
-                    .map((tx: any) => {
-                        const decodedInput = inter.parseLog({ data: tx.data, topics: [BRIDGE_SENT_QUERY[chainId].topic]});
-                        return decodedInput.args
-                    })
-
-
-                const userTxs = decodedLogs.filter((tx: any) => {
-                    return(tx[0]===account)
-                });
-                // console.log("Filtered user logs:", userTxs)
-
-                for(let i=0; i<userTxs.length; i++){
-                    // console.log(userTxs[i].value)
-                    spentSum = spentSum.add(userTxs[i].value??0)
-                }
-
-            }
-        }
+        // if(data && data.data && data.data.result) {
+        //     // console.log('DATA:', data)
+        //     // TODO: This only works for logs of (addresss, amount)
+        //     // Handle api limit
+        //     if(data.data.status === '0' || data.data.message === 'NOTOK'){
+        //         console.log(data)
+        //         console.log("Max limit reached on API rate. Please refresh the page")
+        //     }
+        //     else if (data.data.result.length > 0 && Array.isArray(data.data.result)){
+        //
+        //         const decodedLogs = data.data.result
+        //             .map((tx: any) => {
+        //                 const decodedInput = inter.parseLog({ data: tx.data, topics: [BRIDGE_SENT_QUERY[chainId].topic]});
+        //                 return decodedInput.args
+        //             })
+        //
+        //
+        //         const userTxs = decodedLogs.filter((tx: any) => {
+        //             return(tx[0]===account)
+        //         });
+        //         // console.log("Filtered user logs:", userTxs)
+        //
+        //         for(let i=0; i<userTxs.length; i++){
+        //             // console.log(userTxs[i].value)
+        //             spentSum = spentSum.add(userTxs[i].value??0)
+        //         }
+        //
+        //     }
+        // }
         setSpent(spentSum)
     }
 
     useEffect(() => {
         getAPI()
-    }, [account, chainId, transactions, blockNumberState])
+    }, [account, chainId])
 
     return spent
 
