@@ -83,7 +83,7 @@ function useSwapCallArguments(
 
         const swapMethods = []
 
-        console.log(methodName, args, value)
+        // console.log(methodName, args, value)
 
         swapMethods.push({
                 methodName,

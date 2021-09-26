@@ -6,16 +6,21 @@ import { BigNumber } from '@ethersproject/bignumber'
 import Fraction from '../entities/Fraction'
 import { getAverageBlockTime } from 'apollo/getAverageBlockTime'
 import orderBy from 'lodash/orderBy'
-import sushiData from 'hadeswap-beta-data'
+import useAPI from './useAPI'
 import { useActiveWeb3React } from 'hooks/useActiveWeb3React'
 import { useBridgeContract } from './useContract'
 
 const useBridgeParams = () => {
-    const [params, setParams] = useState<{ dailyLimit: Fraction, minPerTx: Fraction, maxPerTx: Fraction, isInitialized: boolean }  | undefined>()
+    const [params, setParams] = useState<{ dailyLimit: Fraction, minPerTx: Fraction, maxPerTx: Fraction, isInitialized: boolean, dailyAllowance:Fraction }  | undefined>()
     const { account } = useActiveWeb3React()
     const bridgeContract = useBridgeContract()
+    const spent = useAPI()
 
     const fetchAllParams = useCallback(async () => {
+
+        if(!bridgeContract){
+            return
+        }
         // Some day we will use subgraph on this one
         if(!bridgeContract){
             return
@@ -28,32 +33,25 @@ const useBridgeParams = () => {
 
 
         const isInitialized = await bridgeContract?.isInitialized()
-        const dailyLimit = await bridgeContract?.dailyLimit()
+        const dailyLimit: BigNumber = await bridgeContract?.dailyLimit()
         const maxPerTx = await bridgeContract?.maxPerTx()
         const minPerTx = await bridgeContract?.minPerTx()
+        let dailySpent = dailyLimit.sub(spent??0)
 
 
         setParams({
             isInitialized: isInitialized,
             dailyLimit: Fraction.from(dailyLimit, BigNumber.from(10).pow(18)),
             maxPerTx: Fraction.from(maxPerTx, BigNumber.from(10).pow(18)),
-            minPerTx: Fraction.from(minPerTx, BigNumber.from(10).pow(18))
+            minPerTx: Fraction.from(minPerTx, BigNumber.from(10).pow(18)),
+            dailyAllowance: Fraction.from(dailySpent, BigNumber.from(10).pow(18))
         })
 
-        // let limit =  Fraction.from(dailyLimit, BigNumber.from(10).pow(18)).toString(18)
-        //
-        // let min = Fraction.from(minPerTx, BigNumber.from(10).pow(18)).toString(18)
-        //
-        // console.log('PARAms:', isInitialized, limit, maxPerTx, min)
-
-        // } else {
-        //     setFarms({ farms: sorted, userFarms: [] })
-        // }
-    }, [account, bridgeContract])
+    }, [account, bridgeContract, spent])
 
     useEffect(() => {
         fetchAllParams()
-    }, [fetchAllParams])
+    }, [fetchAllParams, spent, bridgeContract])
 
     return params
 }

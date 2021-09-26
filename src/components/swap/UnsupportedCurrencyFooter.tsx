@@ -13,6 +13,7 @@ import { getExplorerLink } from 'utils'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 import useBridgeParams from '../../hooks/useBridgeParams'
+import useAPI from '../../hooks/useAPI'
 
 
 const DetailsFooter = styled.div<{ show: boolean }>`
@@ -47,12 +48,9 @@ export default function UnsupportedCurrencyFooter({
     show: boolean
     currencies: (Currency | undefined)
 }) {
-    const { chainId } = useActiveWeb3React()
     const [showDetails, setShowDetails] = useState(false)
     const params = useBridgeParams()
-
-
-    const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
+    const spent = useAPI()
 
     return (
         <DetailsFooter show={show}>
@@ -79,9 +77,17 @@ export default function UnsupportedCurrencyFooter({
                                         <AutoRow gap="5px" align="center">
                                             <TYPE.body fontWeight={500}>{`Max amount per transfer: ${params.maxPerTx.toString(18)} ${currencies?.symbol}`}</TYPE.body>
                                         </AutoRow>
-                                        <AutoRow gap="5px" align="center">
-                                            <TYPE.body fontWeight={500}>{`Daily limit: ${params.dailyLimit.toString(18)} ${currencies?.symbol}`}</TYPE.body>
-                                        </AutoRow>
+                                        {
+                                            spent ? (
+                                                <AutoRow gap="5px" align="center">
+                                                    <TYPE.body fontWeight={500}>{`Current daily amount remaining: ${params.dailyAllowance.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                                </AutoRow>
+                                            ) : (
+                                                <AutoRow gap="5px" align="center">
+                                                    <TYPE.body fontWeight={500}>{`Daily limit: ${params.dailyLimit.toString(18)} ${currencies?.symbol}`}</TYPE.body>
+                                                </AutoRow>
+                                            )
+                                        }
                                     </AutoColumn>
                                 </OutlineCard>
                             )

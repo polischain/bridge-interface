@@ -8,8 +8,8 @@ import Column, { AutoColumn } from '../../components/Column'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {NETWORK_ICON, NETWORK_LABEL} from '../../constants/networks'
-import {CHAIN_BRIDGES} from '../../constants'
-import { useIsTransactionUnsupported } from 'hooks/Transactions'
+import { BRIDGE_ADDRESS, BRIDGE_SENT_QUERY, CHAIN_BRIDGES } from '../../constants'
+import { useIsTransactionUnsupported} from 'hooks/Transactions'
 
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import {
@@ -19,7 +19,11 @@ import {
     useSwapState
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
-import { useNetworkModalToggle, useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
+import {
+    useNetworkModalToggle,
+    useToggleSettingsMenu,
+    useWalletModalToggle
+} from '../../state/application/hooks'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { ArrowDown } from 'react-feather'
