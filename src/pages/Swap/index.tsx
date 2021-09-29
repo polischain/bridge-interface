@@ -307,7 +307,9 @@ export default function Swap() {
                         swapErrorMessage={swapErrorMessage}
                         onDismiss={handleConfirmDismiss}
                     />
-                    <NetworkSwitch />
+                    <NetworkSwitch 
+                        currency={currencies[Field.OUTPUT]}
+                    />
                     <AutoColumn gap={'md'}>
                         <CurrencyInputPanel
                             value={formattedAmounts[Field.OUTPUT]}

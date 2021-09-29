@@ -1,26 +1,63 @@
-import { MenuFlyout, StyledMenu, StyledMenuButton } from 'components/StyledMenu'
-import React, { memo, useRef } from 'react'
-import styled from 'styled-components'
-import BscNet from '../../assets/networks/bsc-network.jpg'
-import PolisNet from '../../assets/networks/polis.svg'
-import MumbaiNet from '../../assets/networks/polis.svg'
-import MainNet from '../../assets/networks/polis.svg'
+import "dotenv/config"
+import { StyledMenu } from 'components/StyledMenu'
+import React, { memo, useRef, useState, useEffect } from 'react'
+
 
 import { ChainId } from 'hadeswap-beta-sdk'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import { CHAIN_BRIDGES } from '../../constants'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
-
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
+import Fraction from '../../entities/Fraction'
 
-import { useLingui } from '@lingui/react'
+import { PARAMS, API_PARAMS, NETS, ExtendedStyledMenuButton, ExtendedMenuFlyout } from '../../components/NetworkSwitch'
+import { MenuItem, MenuItemLogo, MenuButtonLogo, MenuText, StyledDropDown } from '../../components/NetworkSwitch'
+import { BigNumber } from '@ethersproject/bignumber'
 
-import { PARAMS, NETS, ExtendedStyledMenuButton, ExtendedMenuFlyout, MenuItem, MenuItemLogo, MenuButtonLogo, MenuText, StyledDropDown } from '../../components/NetworkSwitch'
+interface ForeignBalanceProps {
+    url_to_fetch?: RequestInfo | null
+    token?: string | null
+}
+
+function ForeignBalance({
+    url_to_fetch,
+    token
+}: ForeignBalanceProps) {
+    const [error, setError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [foreignBalance, setForeignBalance] = useState(null);
+
+    useEffect(() => {
+        fetch(url_to_fetch ? url_to_fetch : '')
+            .then(response => response.json())
+            .then(data => {
+                setIsLoaded(true);
+                setForeignBalance(data.result)
+            },
+                (error) => {
+                    setIsLoaded(true);
+                    setError(error);
+                });
+
+    }, []);
+
+
+    if (error) {
+        return (<span>Wallet not connected</span>);
+    }
+    else if (!isLoaded) {
+        return (
+            <span>Loading...</span>
+        )
+    }
+    else {
+        return (<span>Balance: {Fraction.from(BigNumber.from(foreignBalance ? foreignBalance : 0), BigNumber.from(10).pow(18)).toString(18)} {token}</span>)
+    }
+}
 
 function NetworkSwitchTo() {
-    const { i18n } = useLingui()
 
     const node = useRef<HTMLDivElement>(null)
     const open = useModalOpen(ApplicationModal.BRIDGE_TO)
@@ -31,7 +68,6 @@ function NetworkSwitchTo() {
 
     const onClick = (key: ChainId) => {
         const params = PARAMS[key]
-        library?.send('wallet_addEthereumChain', [params, account])
         toggle()
     }
 
@@ -41,12 +77,11 @@ function NetworkSwitchTo() {
                 <div className="flex items-center">
                     <MenuButtonLogo src={chainId ? NETWORK_ICON[CHAIN_BRIDGES[chainId].chain] : ''} alt={chainId ? NETWORK_LABEL[chainId] : ''} />
                     <MenuText>
-
-                        {/* {i18n._(`Set bridge to network -> `)} */}
                         {chainId ? NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain] : ''}
                     </MenuText>
                     <StyledDropDown selected={!open} />
                 </div>
+                <ForeignBalance url_to_fetch={chainId ? (chainId ? API_PARAMS[CHAIN_BRIDGES[chainId].chain]?.apiUrl : '') + (account ? account : '') + (API_PARAMS[CHAIN_BRIDGES[chainId].chain]?.apiKey ? (API_PARAMS[CHAIN_BRIDGES[chainId].chain]?.apiKeyUrl + process.env.BSC_API_KEY) : '') : ''} token={chainId ? PARAMS[CHAIN_BRIDGES[chainId].chain]?.nativeCurrency.symbol : ''} />
             </ExtendedStyledMenuButton>
             {open && (
                 <ExtendedMenuFlyout>

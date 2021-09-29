@@ -7,11 +7,10 @@ import MumbaiNet from '../../assets/networks/polis.svg'
 import MainNet from '../../assets/networks/polis.svg'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
-import { ChainId } from 'hadeswap-beta-sdk'
+import { Currency, ChainId } from 'hadeswap-beta-sdk'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
-import { CHAIN_BRIDGES } from '../../constants'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
-
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
@@ -78,6 +77,60 @@ export const PARAMS: {
     }
 
 }
+export const API_PARAMS: {
+    [chainId in ChainId] : {
+        apiUrl: string
+        apiKey: boolean
+        apiKeyUrl: string
+    }
+} = {
+    [ChainId.SPARTA]: {
+        apiUrl: 'https://sparta-explorer.polis.tech/api?module=account&action=balance&address=',
+        apiKey: false,
+        apiKeyUrl: ''
+    },
+    [ChainId.BSC]: {
+        apiUrl: 'https://api.bscscan.com/api?module=account&action=balance&address=',
+        apiKey: true,
+        apiKeyUrl: '&apikey='
+    },
+    [ChainId.MAINNET]: {
+        apiUrl: 'https://explorer.polis.tech/api?module=account&action=balance&address=',
+        apiKey: false,
+        apiKeyUrl: ''
+    },
+    [ChainId.MUMBAI]: {
+        apiUrl: 'https://mumbai.polygonscan.com/api?module=account&action=balance&address=',
+        apiKey: false,
+        apiKeyUrl: ''
+    }
+
+}
+
+
+export const NETS: { [x: string]: 
+    { logo: string; net: string; id: ChainId } } = {
+    bsc: {
+        logo: BscNet,
+        net: 'BSC',
+        id: ChainId.BSC
+    },
+    polis: {
+        logo: PolisNet,
+        net: 'Sparta',
+        id: ChainId.SPARTA
+    },
+    mumbai: {
+        logo: MumbaiNet,
+        net: 'Mumbai',
+        id: ChainId.MUMBAI
+    },
+    mainnet: {
+        logo: MainNet,
+        net: 'Mainnet',
+        id: ChainId.MAINNET
+    }
+}
 
 export const ExtendedStyledMenuButton = styled(StyledMenuButton)`
     display: inline;
@@ -138,30 +191,6 @@ export const MenuText = styled.span`
     display: inline;
 `
 
-
-export const NETS: { [x: string]: { logo: string; net: string; id: ChainId } } = {
-    bsc: {
-        logo: BscNet,
-        net: 'BSC',
-        id: ChainId.BSC
-    },
-    polis: {
-        logo: PolisNet,
-        net: 'Sparta',
-        id: ChainId.SPARTA
-    },
-    mumbai: {
-        logo: MumbaiNet,
-        net: 'Mumbai',
-        id: ChainId.MUMBAI
-    },
-    mainnet: {
-        logo: MainNet,
-        net: 'Mainnet',
-        id: ChainId.MAINNET
-    }
-}
-
 export const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
     margin: 0 0.25rem 0 0.5rem;
     height: 35%;
@@ -172,7 +201,11 @@ export const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
     }
 `
 
-function NetworkSwitch() {
+interface NetworkSwitchProps{
+    currency?: Currency | null
+}
+
+function NetworkSwitch({currency}: NetworkSwitchProps) {
     const { i18n } = useLingui()
 
     const node = useRef<HTMLDivElement>(null)
@@ -181,6 +214,7 @@ function NetworkSwitch() {
     useOnClickOutside(node, open ? toggle : undefined)
 
     const { account, library, chainId } = useActiveWeb3React()
+    const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
 
     const onClick = (key: ChainId) => {
         const params = PARAMS[key]
@@ -199,6 +233,7 @@ function NetworkSwitch() {
                     </MenuText>
                     <StyledDropDown selected={!open} />
                 </div>
+                {'Balance: ' + (selectedCurrencyBalance ? selectedCurrencyBalance?.toSignificant(6) : '0') + ' ' + (currency ? currency!.symbol : '')}
             </ExtendedStyledMenuButton>
             {open && (
                 <ExtendedMenuFlyout>
