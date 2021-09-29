@@ -37,23 +37,24 @@ function ForeignBalance({
                 setForeignBalance(data.result)
             },
                 (error) => {
-                    setIsLoaded(true);
+                    setIsLoaded(false);
                     setError(error);
                 });
 
     }, []);
 
 
-    if (error) {
-        return (<span>Wallet not connected</span>);
-    }
-    else if (!isLoaded) {
-        return (
-            <span>Loading...</span>
-        )
-    }
-    else {
+    if (isLoaded){
+        console.log('Foreign balance')
+        console.log(foreignBalance)
         return (<span>Balance: {Fraction.from(BigNumber.from(foreignBalance ? foreignBalance : 0), BigNumber.from(10).pow(18)).toString(18)} {token}</span>)
+    } else if (error) {
+        console.log('Error. Url:')
+        console.log(url_to_fetch)
+        console.log(error)
+        return (<span>Balance: Could not fetch data </span>);
+    } else{
+        return (<span>Loading... </span>);
     }
 }
 
@@ -68,6 +69,7 @@ function NetworkSwitchTo() {
 
     const onClick = (key: ChainId) => {
         const params = PARAMS[key]
+        library?.send('wallet_addEthereumChain', [params, account])
         toggle()
     }
 
