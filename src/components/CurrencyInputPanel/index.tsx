@@ -17,6 +17,7 @@ import Lottie from 'lottie-react'
 import { formattedNum } from '../../utils'
 import { useLingui } from '@lingui/react'
 import selectCoinImage from '../../assets/svg/select-coin.svg'
+import { CHAIN_BRIDGES } from '../../constants'
 
 const StyledNativeCurrencyLogo = styled.img<{ size: string }>`
     width: ${({ size }) => size};
@@ -173,33 +174,7 @@ export default function CurrencyInputPanel({
         <div id={id} className="rounded bg-dark-800 p-5">
             <div
                 className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row justify-between"
-                // hideInput={hideInput}
-                // cornerRadiusBottomNone={cornerRadiusBottomNone}
-                // cornerRadiusTopNone={cornerRadiusTopNone}
-                // containerBackground={containerBackground}
             >
-                {/* {!hideInput && (
-                    <LabelRow>
-                        <RowBetween>
-                            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-                                {label}
-                            </TYPE.body>
-                            {account && (
-                                <TYPE.body
-                                    onClick={onMax}
-                                    color={theme.text3}
-                                    fontWeight={500}
-                                    fontSize={14}
-                                    style={{ display: 'inline', cursor: 'pointer' }}
-                                >
-                                    {!hideBalance && !!currency && selectedCurrencyBalance
-                                        ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
-                                        : ' -'}
-                                </TYPE.body>
-                            )}
-                        </RowBetween>
-                    </LabelRow>
-                )} */}
                 <div
                     className="w-full sm:w-2/5"
                     // style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}
@@ -271,20 +246,6 @@ export default function CurrencyInputPanel({
                             )}
                         </div>
                     </CurrencySelect>
-                    {/* {!hideInput && (
-                        <>
-                            <NumericalInput
-                                className="token-amount-input"
-                                value={value}
-                                onUserInput={val => {
-                                    onUserInput(val)
-                                }}
-                            />
-                            {account && currency && showMaxButton && label !== 'To' && (
-                                <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
-                            )}
-                        </>
-                    )} */}
                 </div>
                 <div className="flex items-center rounded bg-dark-900 space-x-3 p-3 w-full sm:w-3/5">
                     {!hideInput && (
@@ -322,7 +283,7 @@ export default function CurrencyInputPanel({
                     )}
                 </div>
             </div>
-            {!disableCurrencySelect && onCurrencySelect && (
+            {!disableCurrencySelect && onCurrencySelect && chainId && CHAIN_BRIDGES[chainId].isNative &&(
                 <CurrencySearchModal
                     isOpen={modalOpen}
                     onDismiss={handleDismissSearch}
