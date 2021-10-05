@@ -9,6 +9,7 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { Currency, ChainId } from 'hadeswap-beta-sdk'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
+import { CHAIN_BRIDGES } from '../../constants'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -107,6 +108,26 @@ export const API_PARAMS: {
 
 }
 
+
+export const LOGOS: {
+    [chainId in ChainId] : {
+        logo: string
+    }
+} = {
+    [ChainId.SPARTA]: {
+        logo: PolisNet
+    },
+    [ChainId.BSC]: {
+        logo: BscNet
+    },
+    [ChainId.MAINNET]: {
+        logo: MainNet
+    },
+    [ChainId.MUMBAI]: {
+        logo: MumbaiNet
+    }
+
+}  
 
 export const NETS: { [x: string]: 
     { logo: string; net: string; id: ChainId } } = {
@@ -215,12 +236,16 @@ function NetworkSwitch({currency}: NetworkSwitchProps) {
 
     const { account, library, chainId } = useActiveWeb3React()
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+    
+    const bridgeChain = CHAIN_BRIDGES[chainId!].chain;
+    const bridgeChainName = chainId ? NETWORK_LABEL[bridgeChain] : "";
 
-    const onClick = (key: ChainId) => {
-        const params = PARAMS[key]
+    const onClick = () => {
+        const params = PARAMS[bridgeChain]
         library?.send('wallet_addEthereumChain', [params, account])
         toggle()
     }
+
 
     return (
         <StyledMenu ref={node}>
@@ -233,16 +258,15 @@ function NetworkSwitch({currency}: NetworkSwitchProps) {
                     </MenuText>
                     <StyledDropDown selected={!open} />
                 </div>
-                {'Balance: ' + (selectedCurrencyBalance ? selectedCurrencyBalance?.toSignificant(6) : '0') + ' ' + (currency ? currency!.symbol : '')}
-            </ExtendedStyledMenuButton>
+                </ExtendedStyledMenuButton>
             {open && (
                 <ExtendedMenuFlyout>
-                    {Object.entries(NETS).map(([key, { logo, net, id }]) => (
-                        <MenuItem onClick={() => onClick(id)} key={key}>
-                            <MenuItemLogo src={logo} alt={net} />
-                            {net}{' '}
+                    {
+                        <MenuItem onClick={onClick}>
+                            <MenuItemLogo src={LOGOS[bridgeChain].logo} alt={bridgeChainName} />
+                            {bridgeChainName}{' '}
                         </MenuItem>
-                    ))}
+                    }
                 </ExtendedMenuFlyout>
             )}
         </StyledMenu>
