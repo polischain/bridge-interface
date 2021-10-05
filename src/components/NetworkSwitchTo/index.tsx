@@ -28,6 +28,8 @@ function ForeignBalance({
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [foreignBalance, setForeignBalance] = useState(null);
+    const { account, chainId } = useActiveWeb3React()
+
 
     useEffect(() => {
         fetch(url_to_fetch ? url_to_fetch : '')
@@ -41,7 +43,7 @@ function ForeignBalance({
                     setError(error);
                 });
 
-    }, []);
+    }, [chainId, account]);
 
 
     if (isLoaded){
@@ -83,7 +85,9 @@ function NetworkSwitchTo() {
                     </MenuText>
                     <StyledDropDown selected={!open} />
                 </div>
-                <ForeignBalance url_to_fetch={chainId && account ? (chainId ? API_PARAMS[CHAIN_BRIDGES[chainId].chain]?.apiUrl : '') + account + (API_PARAMS[CHAIN_BRIDGES[chainId].chain]?.apiKey ? (API_PARAMS[CHAIN_BRIDGES[chainId].chain]?.apiKeyUrl) : '') : ''} token={chainId ? PARAMS[CHAIN_BRIDGES[chainId].chain]?.nativeCurrency.symbol : ''} />
+                <ForeignBalance url_to_fetch={chainId && account ? (chainId ? API_PARAMS[CHAIN_BRIDGES[chainId].chain]?.apiUrl : '') + account + (API_PARAMS[CHAIN_BRIDGES[chainId].chain]?.apiKey ? (API_PARAMS[CHAIN_BRIDGES[chainId].chain]?.apiKeyUrl) : '') : ''}
+                                token={chainId ? ( CHAIN_BRIDGES[chainId].isNative?  PARAMS[CHAIN_BRIDGES[chainId].chain]?.nativeCurrency.symbol : CHAIN_BRIDGES[chainId].symbol)  : ''} />
+
             </ExtendedStyledMenuButton>
             {open && (
                 <ExtendedMenuFlyout>
