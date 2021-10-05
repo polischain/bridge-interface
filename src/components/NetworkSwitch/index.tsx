@@ -93,7 +93,7 @@ export const API_PARAMS: {
     [ChainId.BSC]: {
         apiUrl: 'https://api.bscscan.com/api?module=account&action=balance&address=',
         apiKey: true,
-        apiKeyUrl: '&apikey='
+        apiKeyUrl: '&apikey='+ process.env.REACT_APP_BSCSCAN_API_KEY
     },
     [ChainId.MAINNET]: {
         apiUrl: 'https://explorer.polis.tech/api?module=account&action=balance&address=',
