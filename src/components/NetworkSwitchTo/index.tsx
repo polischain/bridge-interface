@@ -12,7 +12,7 @@ import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import Fraction from '../../entities/Fraction'
 
-import { PARAMS, API_PARAMS, NETS, LOGOS, ExtendedStyledMenuButton, ExtendedMenuFlyout } from '../../components/NetworkSwitch'
+import { PARAMS, API_PARAMS, LOGOS, ExtendedStyledMenuButton, ExtendedMenuFlyout } from '../../components/NetworkSwitch'
 import { MenuItem, MenuItemLogo, MenuButtonLogo, MenuText, StyledDropDown, } from '../../components/NetworkSwitch'
 import { BigNumber } from '@ethersproject/bignumber'
 

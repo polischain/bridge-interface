@@ -127,30 +127,6 @@ export const LOGOS: {
         logo: MumbaiNet
     }
 
-}  
-
-export const NETS: { [x: string]: 
-    { logo: string; net: string; id: ChainId } } = {
-    bsc: {
-        logo: BscNet,
-        net: 'BSC',
-        id: ChainId.BSC
-    },
-    polis: {
-        logo: PolisNet,
-        net: 'Sparta',
-        id: ChainId.SPARTA
-    },
-    mumbai: {
-        logo: MumbaiNet,
-        net: 'Mumbai',
-        id: ChainId.MUMBAI
-    },
-    mainnet: {
-        logo: MainNet,
-        net: 'Mainnet',
-        id: ChainId.MAINNET
-    }
 }
 
 export const ExtendedStyledMenuButton = styled(StyledMenuButton)`
