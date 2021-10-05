@@ -91,9 +91,10 @@ export const API_PARAMS: {
         apiKeyUrl: ''
     },
     [ChainId.BSC]: {
-        apiUrl: 'https://api.bscscan.com/api?module=account&action=balance&address=',
+        apiUrl: 'https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0xb5bea8a26d587cf665f2d78f077cca3c7f6341bd&address=',
         apiKey: true,
-        apiKeyUrl: '&apikey='+ process.env.REACT_APP_BSCSCAN_API_KEY
+        apiKeyUrl: '&apikey='+ process.env.REACT_APP_BSCSCAN_API_KEY,
+
     },
     [ChainId.MAINNET]: {
         apiUrl: 'https://explorer.polis.tech/api?module=account&action=balance&address=',
