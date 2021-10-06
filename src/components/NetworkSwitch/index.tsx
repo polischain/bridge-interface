@@ -135,7 +135,8 @@ export const ExtendedStyledMenuButton = styled(StyledMenuButton)`
     border: 2px solid rgb(23, 21, 34);
     font-size: 1.25rem;
     //width: auto;
-    height: 7rem;
+    height: 3rem;
+    margin-bottom: 10px
     padding: 0;
     align:left;
     text-align: left;
@@ -145,18 +146,19 @@ export const ExtendedStyledMenuButton = styled(StyledMenuButton)`
 `
 
 export const ExtendedMenuFlyout = styled(MenuFlyout)`
-    min-width: 10rem;
     ${({ theme }) => theme.mediaWidth.upToMedium`
     max-height: 232px;
     overflow: auto;
     min-width: 11rem;
     top: -16.5rem;
+    background: white;
   `};
 `
 
 export const MenuItem = styled.span`
     align-items: center;
     flex: 1;
+
     //display: flex;
     padding: 0.5rem 0.5rem;
     font-weight: 500;
@@ -167,7 +169,7 @@ export const MenuItem = styled.span`
         text-decoration: none;
     }
     > svg {
-        margin-right: 8px;
+        margin-right: 0px;
     }
 `
 
@@ -180,9 +182,9 @@ export const MenuItemLogo = styled.img`
 
 export const MenuButtonLogo = styled.img`
     display: inline;
-    width: 5rem;
-    height: 5rem;
-    padding: 1rem 1rem;
+    width: 3rem;
+    height: 3rem;
+    padding: 0.5rem 0.5rem;
 `
 
 export const MenuText = styled.span`
@@ -227,8 +229,7 @@ function NetworkSwitch({currency}: NetworkSwitchProps) {
     return (
         <StyledMenu ref={node}>
             <ExtendedStyledMenuButton onClick={toggle}>
-
-                <div className="flex items-center">
+                <div className="flex items-center" >
                     <MenuButtonLogo src={chainId ? NETWORK_ICON[chainId] : ''} alt={chainId ? NETWORK_LABEL[chainId] : ''} />
                     <MenuText>
                         {chainId ? NETWORK_LABEL[chainId] : ''}
