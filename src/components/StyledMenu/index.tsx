@@ -45,18 +45,17 @@ export const StyledMenu = styled.div`
 `
 
 export const MenuFlyout = styled.span`
-    min-width: 8.125rem;
-    background-color: #151822;
-    // background-color: ${({ theme }) => theme.bg3};
+    min-width: 100%;
+    background-color: #1c1b1b;
     box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
         0px 24px 32px rgba(0, 0, 0, 0.01);
-    border-radius: ${({ theme }) => theme.borderRadius};
-    padding: 0.5rem;
+    border-radius: 0 0 2px 2px;
+    padding: 0.2rem 0.25rem;
     display: flex;
     flex-direction: column;
     font-size: 1rem;
     position: absolute;
-    top: 3rem;
+    top: 2.65rem;
     right: 0rem;
     z-index: 100;
 `

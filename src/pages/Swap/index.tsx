@@ -1,9 +1,9 @@
 import { ApprovalState, useApproveCallback, useApproveCallbackFromBridge } from '../../hooks/useApproveCallback'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { AutoRow, RowBetween } from '../../components/Row'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/ButtonLegacy'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonDropdown } from '../../components/ButtonLegacy'
 import Card, { DarkCard, GreyCard } from '../../components/CardLegacy'
-import { ChainId, Currency, CurrencyAmount, POLIS, JSBI, Token, Fraction } from 'hadeswap-beta-sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, Fraction } from 'hadeswap-beta-sdk'
 import Column, { AutoColumn } from '../../components/Column'
 import { LinkStyledButton, TYPE } from '../../theme'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
@@ -49,6 +49,8 @@ import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useLingui } from '@lingui/react'
+import NetworkSwitch from '../../components/NetworkSwitch'
+import NetworkSwitchTo from '../../components/NetworkSwitchTo'
 
 export default function Swap() {
     const { i18n } = useLingui()
@@ -294,7 +296,6 @@ export default function Swap() {
             />
             <SwapPoolTabs active={'swap'} />
             <div className="bg-dark-900 shadow-swap-blue-glow w-full max-w-2xl rounded">
-                <SwapHeader input={chainId?NETWORK_LABEL[chainId]:''} output={chainId?NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain]:''} />
                 <Wrapper id="swap-page">
                     <ConfirmSwapModal
                         isOpen={showConfirm}
@@ -309,8 +310,10 @@ export default function Swap() {
                         swapErrorMessage={swapErrorMessage}
                         onDismiss={handleConfirmDismiss}
                     />
+                    <NetworkSwitch 
+                        currency={currencies[Field.OUTPUT]}
+                    />
                     <AutoColumn gap={'md'}>
-
                         <CurrencyInputPanel
                             value={formattedAmounts[Field.OUTPUT]}
                             // onUserInput={handleTypeOutput}
@@ -436,8 +439,10 @@ export default function Swap() {
                     {/*    >*/}
                     {/*    </div>*/}
                     {/*)}*/}
+                    <NetworkSwitchTo />
                 </Wrapper>
             </div>
+            <SwapHeader input={chainId?NETWORK_LABEL[chainId]:''} output={chainId?NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain]:''} />
             {
                 <UnsupportedCurrencyFooter
                     show={userHasSpecifiedInputOutput && unsupportedBridge}
