@@ -35,10 +35,10 @@ export const BRIDGE_SENT_QUERY = {
 
 // Given the selected chainId, returns the other-side-of-the-bridge chainID and if the other side is the native or the foreign
 export const CHAIN_BRIDGES = {
-    [ChainId.MUMBAI]: { chain: ChainId.SPARTA, isNative: true },
-    [ChainId.SPARTA]: { chain: ChainId.MUMBAI, isNative: false},
-    [ChainId.BSC]: { chain: ChainId.MAINNET, isNative: true},
-    [ChainId.MAINNET]: { chain: ChainId.BSC, isNative: false},
+    [ChainId.MUMBAI]: { chain: ChainId.SPARTA, isNative: true, symbol: 'MOCK' },
+    [ChainId.SPARTA]: { chain: ChainId.MUMBAI, isNative: false, symbol: 'POLIS' },
+    [ChainId.BSC]: { chain: ChainId.MAINNET, isNative: true, symbol: 'POLIS' },
+    [ChainId.MAINNET]: { chain: ChainId.BSC, isNative: false, symbol: 'POLIS' },
 
 }
 
