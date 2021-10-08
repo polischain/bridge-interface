@@ -70,7 +70,6 @@ const useAPI = () => {
 
         // if(data && data.data && data.data.result) {
         //     // console.log('DATA:', data)
-        //     // TODO: This only works for logs of (addresss, amount)
         //     // Handle api limit
         //     if(data.data.status === '0' || data.data.message === 'NOTOK'){
         //         console.log(data)
