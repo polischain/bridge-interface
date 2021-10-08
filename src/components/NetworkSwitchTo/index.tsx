@@ -47,16 +47,16 @@ function ForeignBalance({
 
 
     if (isLoaded){
-        console.log('Foreign balance')
-        console.log(foreignBalance)
+        // console.log('Foreign balance')
+        // console.log(foreignBalance)
         return (
             <div style={{ width: '100%' }} >
                 <span style={{ right: '0', position: 'absolute', marginTop: '-1rem', marginRight: '1rem', padding: '10px' }} >Balance: {Fraction.from(BigNumber.from(foreignBalance ? foreignBalance : 0), BigNumber.from(10).pow(18)).toString(18)} {token}</span>
             </div>
         )
     } else if (error) {
-        console.log('Error. Url:')
-        console.log(url_to_fetch)
+        console.log('Error:')
+        // console.log(url_to_fetch)
         console.log(error)
         return (<span>Balance: Could not fetch data </span>);
     } else{
