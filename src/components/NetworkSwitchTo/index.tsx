@@ -55,12 +55,12 @@ function ForeignBalance({
             </div>
         )
     } else if (error) {
-        console.log('Error:')
+        // console.log('Error:')
         // console.log(url_to_fetch)
-        console.log(error)
-        return (<span>Balance: Could not fetch data </span>);
+        // console.log(error)
+        return (<span style={{ right: '0', position: 'absolute', marginTop: '-1rem', marginRight: '1rem', padding: '10px' }}>Balance: Could not fetch data </span>);
     } else{
-        return (<span>Loading... </span>);
+        return (<span style={{ right: '0', position: 'absolute', marginTop: '-1rem', marginRight: '1rem', padding: '10px' }}>Loading... </span>);
     }
 }
 
