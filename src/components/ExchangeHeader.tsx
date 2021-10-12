@@ -16,7 +16,7 @@ export default function SwapHeader({ input = undefined, output = undefined }: an
     const [animateWallet, setAnimateWallet] = useState(false)
 
     return (
-        <div style={{marginTop: '20px'}} className="flex justify-between space-x-3 pt-4 px-4">
+        <div style={{marginTop: '10px'}} className="flex justify-between space-x-3 pt-4 px-4">
             <div  className="grid grid-cols-1 rounded-md p-3px md:bg-dark-800">
                     <span  >{`Current Bridge: ${input && input} -> ${output && output}` }</span>
             </div>

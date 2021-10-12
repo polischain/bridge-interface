@@ -60,4 +60,7 @@ input:focus {
   .balance-span {
     font-size: 20px;
   }
+  .shadow-swap-blue-glow {
+    padding: 20px;
+  }
 }

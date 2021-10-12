@@ -95,7 +95,7 @@ export default function UnsupportedCurrencyFooter({
                     </AutoColumn>
                 </Card>
             </Modal>
-            <ButtonEmpty margin={'-10px'} padding={'0'} onClick={() => setShowDetails(true)}>
+            <ButtonEmpty  padding={'0'} onClick={() => setShowDetails(true)}>
                 <TYPE.blue>Read more about this error</TYPE.blue>
             </ButtonEmpty>
         </DetailsFooter>

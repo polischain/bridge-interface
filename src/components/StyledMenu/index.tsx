@@ -41,6 +41,9 @@ export const StyledMenu = styled.div`
     text-align: left;
     ${({ theme }) => theme.mediaWidth.upToExtra2Small`
     margin-left: 0.2rem;
+    @media(min-width: 500px) {
+      margin-bottom: 100px;
+    }
   `};
 `
 
