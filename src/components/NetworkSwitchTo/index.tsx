@@ -48,7 +48,7 @@ function ForeignBalance({
         // console.log(foreignBalance)
         return (
             <div style={{ width: '100%' }} >
-                <span className='balance-span' >Balance: {Fraction.from(BigNumber.from(foreignBalance ? foreignBalance : 0), BigNumber.from(10).pow(18)).toString(18)} {token}</span>
+                <span className='balance-span' >Balance: {Fraction.from(BigNumber.from(foreignBalance ? foreignBalance : 0), BigNumber.from(10).pow(18)).toString(4)} {token}</span>
             </div>
         )
     } else if (error) {
