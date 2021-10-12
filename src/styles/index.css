@@ -46,3 +46,18 @@ input:focus {
   background: #FA52A0;
   cursor: pointer;
 }
+
+.balance-span {
+  right: 0; 
+  position: absolute; 
+  margin-top: -1rem;
+  margin-right: 1rem;
+  padding: 10px;
+
+}
+
+@media (max-width: 500px) {
+  .balance-span {
+    font-size: 20px;
+  }
+}

@@ -149,8 +149,9 @@ export const ExtendedMenuFlyout = styled(MenuFlyout)`
     ${({ theme }) => theme.mediaWidth.upToMedium`
     max-height: 232px;
     overflow: auto;
-    min-width: 11rem;
-    top: -16.5rem;
+    width: 100%;
+    top: 3.5rem;
+    position: absolute
     background: white;
   `};
 `
