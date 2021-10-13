@@ -53,7 +53,14 @@ input:focus {
   margin-top: -1rem;
   margin-right: 1rem;
   padding: 10px;
+}
 
+.balance-error-span {
+  right: 0; 
+  position: absolute; 
+  margin-top: -1rem;
+  margin-right: 1rem;
+  padding: 10px;
 }
 
 @media (max-width: 500px) {
@@ -62,5 +69,8 @@ input:focus {
   }
   .shadow-swap-blue-glow {
     padding: 20px;
+  }
+  .balance-error-span {
+    font-size: 16px;
   }
 }
