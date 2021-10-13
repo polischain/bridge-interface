@@ -1,9 +1,6 @@
 import "dotenv/config"
 import { StyledMenu } from 'components/StyledMenu'
 import React, { memo, useRef, useState, useEffect } from 'react'
-
-
-import { ChainId } from 'hadeswap-beta-sdk'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import { CHAIN_BRIDGES } from '../../constants'
 import { useActiveWeb3React } from '../../hooks/useActiveWeb3React'
