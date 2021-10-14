@@ -20,7 +20,7 @@ const DetailsFooter = styled.div<{ show: boolean }>`
     padding-top: calc(16px + 2rem);
     //padding-bottom: 20px;
     margin-top: -2rem;
-    width: 100%;
+    //width: 100%;
     //max-width: 400px;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -95,7 +95,7 @@ export default function UnsupportedCurrencyFooter({
                     </AutoColumn>
                 </Card>
             </Modal>
-            <ButtonEmpty  padding={'0'} onClick={() => setShowDetails(true)}>
+            <ButtonEmpty  padding={'0'} onClick={() => {setShowDetails(true)}}>
                 <TYPE.blue>Read more about this error</TYPE.blue>
             </ButtonEmpty>
         </DetailsFooter>

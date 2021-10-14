@@ -221,6 +221,7 @@ function NetworkSwitch({currency}: NetworkSwitchProps) {
     const bridgeChainName = chainId ? NETWORK_LABEL[bridgeChain] : "";
 
     const onClick = () => {
+        if(!account || !!chainId) {return}
         const params = PARAMS[bridgeChain]
         library?.send('wallet_addEthereumChain', [params, account])
         toggle()

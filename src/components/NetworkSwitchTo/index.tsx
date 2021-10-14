@@ -71,6 +71,7 @@ function NetworkSwitchTo() {
     const { account, library, chainId } = useActiveWeb3React()
 
     const onClick = () => {
+        if(!account || !!chainId) {return}
         const params = PARAMS[CHAIN_BRIDGES[chainId!].chain]
         library?.send('wallet_addEthereumChain', [params, account])
         toggle()
