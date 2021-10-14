@@ -93,7 +93,7 @@ input:focus {
 
 @media (max-width: 300px) {
   .balance-span {
-    font-size: 20px;
+    font-size: 12px;
   }
   .shadow-swap-blue-glow {
     padding: 0px;
