@@ -63,14 +63,42 @@ input:focus {
   padding: 10px;
 }
 
+.shadow-swap-blue-glow {
+  padding: 20px;
+}
+
 @media (max-width: 500px) {
   .balance-span {
     font-size: 20px;
   }
   .shadow-swap-blue-glow {
-    padding: 20px;
+    padding: 50px;
   }
   .balance-error-span {
     font-size: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .balance-span {
+    font-size: 12px;
+  }
+  .shadow-swap-blue-glow {
+    padding: 2px;
+  }
+  .balance-error-span {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 300px) {
+  .balance-span {
+    font-size: 20px;
+  }
+  .shadow-swap-blue-glow {
+    padding: 0px;
+  }
+  .balance-error-span {
+    font-size: 10px;
   }
 }
