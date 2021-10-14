@@ -442,13 +442,15 @@ export default function Swap() {
                     <NetworkSwitchTo />
                 </Wrapper>
             </div>
-            <SwapHeader input={chainId?NETWORK_LABEL[chainId]:''} output={chainId?NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain]:''} />
             {
                 <UnsupportedCurrencyFooter
                     show={userHasSpecifiedInputOutput && unsupportedBridge}
                     currencies={currencies.OUTPUT}
                 />
             }
+            <SwapHeader input={chainId?NETWORK_LABEL[chainId]:''} output={chainId?NETWORK_LABEL[CHAIN_BRIDGES[chainId].chain]:''} />
+
+
         </>
     )
 }

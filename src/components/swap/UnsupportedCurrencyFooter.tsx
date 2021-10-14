@@ -18,7 +18,7 @@ import useAPI from '../../hooks/useAPI'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
     padding-top: calc(16px + 2rem);
-    padding-bottom: 20px;
+    //padding-bottom: 20px;
     margin-top: -2rem;
     width: 100%;
     //max-width: 400px;
